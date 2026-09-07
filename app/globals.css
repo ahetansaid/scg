@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   L'ARC — socle de design SCG
+   Registre : bi-thème alterné nuit / papier / laiton.
+   Trois motifs porteurs : l'arc (trajectoire), la cohorte (les places),
+   le ruban (le trimestre déplié).
+   Référence : Charte-graphique-SCG.pdf
+   ========================================================================== */
+
+@theme {
+  /* --- Identité SCG. Ces valeurs ne suivent pas le thème du lecteur : --------
+     c'est la marque, elle est la même partout.                              */
+  --color-nuit: #06182f;
+  --color-nuit-2: #0a2646;
+  --color-marine: #0b2e5b;
+  --color-marine-clair: #164a85;
+  --color-papier: #eef0f2;
+  --color-papier-2: #e1e6ea;
+  --color-encre: #101820;
+  --color-laiton: #c08a2e;
+  --color-laiton-vif: #d89b34;
+  --color-laiton-fonce: #8a5f14;
+  --color-azur: #3e8fc1;
+  --color-gris: #5c6b7a;
+  --color-gris-clair: #93a0ac;
+
+  /* --- Statuts. Réservés aux états, jamais à la décoration. --------------- */
+  --color-vert: #1f6b4a;
+  --color-vert-clair: #4ed89b;
+  --color-terre: #9c3a22;
+  --color-terre-clair: #f09077;
+
+  /* --- Lignes et surfaces dérivées ---------------------------------------- */
+  --color-ligne: #cbd4dc;
+  --color-ligne-douce: #dee4e9;
+
+  /* --- Trois voix typographiques ------------------------------------------
+     display : Bricolage Grotesque, interface et grands titres
+     italique : Instrument Serif, EN ITALIQUE SEULEMENT — voix humaine
+     mono : IBM Plex Mono, dates, indices, places                            */
+  --font-display: var(--font-bricolage), -apple-system, "Segoe UI", system-ui,
+    sans-serif;
+  --font-italique: var(--font-instrument), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+
+  /* --- Échelle typographique. Aucune taille hors de cette suite. ---------- */
+  --text-mono-xs: 0.61rem; /* balises en capitales */
+  --text-xs: 0.75rem; /* 12 */
+  --text-sm: 0.875rem; /* 14 */
+  --text-base: 1rem; /* 16 */
+  --text-lg: 1.25rem; /* 20 */
+  --text-xl: 1.5625rem; /* 25 */
+  --text-2xl: 2rem; /* 32 */
+  --text-3xl: 2.5rem; /* 40 */
+  --text-4xl: 3.5rem; /* 56 */
+  --text-5xl: 5.125rem; /* 82 */
+
+  /* --- Un rayon par rôle, pas un rayon partout ---------------------------- */
+  --radius-etiquette: 5px;
+  --radius-champ: 12px;
+  --radius-carte: 16px;
+  --radius-panneau: 18px;
+  --radius-cadre: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--color-papier);
+  color: var(--color-encre);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* La tension typographique de la charte : plus le titre est grand, plus
+   l'approche se resserre. C'est ce qui donne la densité — l'oublier casse
+   l'identité, donc c'est encodé ici et pas retapé à chaque usage. */
+.t-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 7.4vw, 5.125rem);
+  line-height: 0.86;
+  letter-spacing: -0.058em;
+  text-wrap: balance;
+}
+
+.t-h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.6rem, 3.6vw, 2.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.t-h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+/* La voix humaine. Jamais en romain : la fonte n'est chargée qu'en italique. */
+.t-italique {
+  font-family: var(--font-italique);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Balise en capitales : dates, formats, lieux, indices. */
+.t-balise {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono-xs);
+  font-weight: 500;
+  letter-spacing: 0.21em;
+  text-transform: uppercase;
+}
+
+/* Les chiffres qui s'alignent en colonne s'alignent vraiment. */
+.t-chiffres {
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Accessibilité
+   -------------------------------------------------------------------------- */
+
+:focus-visible {
+  outline: 2px solid var(--color-laiton);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+::selection {
+  background: var(--color-laiton);
+  color: var(--color-nuit);
+}
+
+/* Réservé aux lecteurs d'écran : la cohorte et l'arc sont des graphiques,
+   ils ne doivent jamais être la seule source de l'information. */
+.sr-only-scg {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
