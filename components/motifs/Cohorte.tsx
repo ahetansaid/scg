@@ -1,5 +1,5 @@
 /* ============================================================================
-   MOTIF — LA COHORTE
+   MOTIF – LA COHORTE
    Un carré, un siège. On lit « il reste trois places » sans chiffre.
    Sur le site public : pris ou libre. En back-office, la même rangée se
    colore par statut de paiement.

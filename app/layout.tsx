@@ -10,7 +10,7 @@ const bricolage = Bricolage_Grotesque({
   display: "swap",
 });
 
-/* Instrument Serif n'est chargée qu'en italique — c'est la règle de la
+/* Instrument Serif n'est chargée qu'en italique – c'est la règle de la
    charte, et ça évite d'embarquer un romain qu'on n'utilisera jamais. */
 const instrument = Instrument_Serif({
   variable: "--font-instrument",
@@ -29,7 +29,7 @@ const plexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "SCG — Strategic Consulting Group",
+    default: "SCG – Strategic Consulting Group",
     template: "%s · SCG",
   },
   description:

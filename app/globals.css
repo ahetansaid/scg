@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   L'ARC — socle de design SCG
+   L'ARC – socle de design SCG
    Registre : bi-thème alterné nuit / papier / laiton.
    Trois motifs porteurs : l'arc (trajectoire), la cohorte (les places),
    le ruban (le trimestre déplié).
@@ -37,7 +37,7 @@
 
   /* --- Trois voix typographiques ------------------------------------------
      display : Bricolage Grotesque, interface et grands titres
-     italique : Instrument Serif, EN ITALIQUE SEULEMENT — voix humaine
+     italique : Instrument Serif, EN ITALIQUE SEULEMENT – voix humaine
      mono : IBM Plex Mono, dates, indices, places                            */
   --font-display: var(--font-bricolage), -apple-system, "Segoe UI", system-ui,
     sans-serif;
@@ -84,7 +84,7 @@ body {
 }
 
 /* La tension typographique de la charte : plus le titre est grand, plus
-   l'approche se resserre. C'est ce qui donne la densité — l'oublier casse
+   l'approche se resserre. C'est ce qui donne la densité – l'oublier casse
    l'identité, donc c'est encodé ici et pas retapé à chaque usage. */
 .t-display {
   font-family: var(--font-display);

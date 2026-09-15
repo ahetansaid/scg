@@ -6,6 +6,7 @@ import {
   jsonb,
   pgEnum,
   pgTable,
+  real,
   text,
   timestamp,
   unique,
@@ -13,7 +14,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 /* ============================================================================
-   SCG — schéma initial
+   SCG – schéma initial
    PostgreSQL 16 · Drizzle
    Reprend le socle d'AfriMentor (mentors, demandes, publications,
    opportunités, favoris) et l'étend aux programmes, aux sessions et aux
@@ -298,7 +299,7 @@ export const certificats = pgTable("certificats", {
 });
 
 /* ============================================================================
-   4. MENTORAT — repris d'AfriMentor
+   4. MENTORAT – repris d'AfriMentor
    ============================================================================ */
 
 export const mentors = pgTable(
@@ -378,7 +379,7 @@ export const messagesMentorat = pgTable(
 );
 
 /* ============================================================================
-   5. PUBLICATIONS — moteur éditorial repris de Bénin Numérique 2050
+   5. PUBLICATIONS – moteur éditorial repris de Bénin Numérique 2050
    ============================================================================ */
 
 export const articles = pgTable(
@@ -426,7 +427,7 @@ export const chapitres = pgTable(
 );
 
 /* `donnees` porte la série telle qu'elle est tracée, et `sourceLibelle` d'où
-   elle vient. Les deux ensemble rendent la figure téléchargeable et citable —
+   elle vient. Les deux ensemble rendent la figure téléchargeable et citable –
    c'est ce qui distingue une publication de cabinet d'un billet de blog. */
 export const figures = pgTable(
   "figures",
@@ -446,7 +447,7 @@ export const figures = pgTable(
 );
 
 /* ============================================================================
-   6. OPPORTUNITÉS ET FAVORIS — repris d'AfriMentor
+   6. OPPORTUNITÉS ET FAVORIS – repris d'AfriMentor
    ============================================================================ */
 
 export const opportunites = pgTable(
@@ -469,7 +470,7 @@ export const opportunites = pgTable(
   (t) => [index("opportunites_domaine_idx").on(t.domaine, t.statut)],
 );
 
-/* Une seule table de favoris pour tout ce qu'on peut mettre de côté —
+/* Une seule table de favoris pour tout ce qu'on peut mettre de côté –
    programme, mentor, opportunité, publication. Le suivi d'un mentor est un
    favori de nature « mentor » : inutile d'une table dédiée. */
 export const favoris = pgTable(
@@ -508,6 +509,15 @@ export const journalAudit = pgTable(
   },
   (t) => [index("journal_acteur_idx").on(t.acteurUserId, t.creeAt)],
 );
+
+/* Seaux de la limitation de débit. En serverless, chaque invocation peut
+   tourner sur une instance neuve : un compteur en mémoire ne compte rien.
+   La clé est `portée:adresse`. */
+export const limitationsDebit = pgTable("limitations_debit", {
+  cle: text().primaryKey(),
+  jetons: real().notNull(),
+  dernierAt: timestamp("dernier_at", { withTimezone: true }).notNull().defaultNow(),
+});
 
 export const jetons = pgTable(
   "jetons",
