@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { Cascade, Element, Eleve } from "@/components/Animations";
 import { EnTete, Filtre } from "@/components/EnTete";
 import { PiedDePage } from "@/components/PiedDePage";
 import { TitreSection } from "@/components/Vitrine";
@@ -68,14 +69,14 @@ export default async function Publications(props: PageProps<"/publications">) {
             {rapports.length > 0 && (
               <section className="mb-14">
                 <TitreSection titre="Rapports" />
-                <div className="grid gap-5 md:grid-cols-2">
+                <Cascade className="grid gap-5 md:grid-cols-2">
                   {rapports.map((r) => (
+                    <Element key={r.slug}>
+                    <Eleve className="h-full">
                     <Link
-                      key={r.slug}
                       href={`/publications/rapports/${r.slug}`}
-                      className="relative flex h-full flex-col gap-2 overflow-hidden rounded-grand bg-marine p-8 text-white no-underline shadow-carte transition-transform hover:-translate-y-1 motion-reduce:hover:translate-y-0"
+                      className="relative flex h-full flex-col gap-2 overflow-hidden rounded-grand bg-marine p-8 text-white no-underline shadow-carte"
                     >
-                      <span aria-hidden="true" className="pastille size-32 bg-canard/30" style={{ top: -30, right: -20 }} />
                       <span className="relative text-[0.78rem] font-semibold text-soleil">Rapport</span>
                       <span className="relative text-[1.5rem] leading-tight font-extrabold tracking-[-0.02em]">{r.titre}</span>
                       {r.sousTitre && <span className="relative text-white/80">{r.sousTitre}</span>}
@@ -84,20 +85,23 @@ export default async function Publications(props: PageProps<"/publications">) {
                         <span className="relative mt-auto pt-4 text-[0.8rem] text-white/60">{formatLong.format(r.publieAt)}</span>
                       )}
                     </Link>
+                    </Eleve>
+                    </Element>
                   ))}
-                </div>
+                </Cascade>
               </section>
             )}
 
             {articles.length > 0 && (
               <section>
                 <TitreSection titre="Notes et tribunes" />
-                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                <Cascade className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   {articles.map((a) => (
+                    <Element key={a.slug}>
+                    <Eleve className="h-full">
                     <Link
-                      key={a.slug}
                       href={`/publications/${a.slug}`}
-                      className="flex h-full flex-col gap-2 rounded-carte border border-ligne bg-white p-6 no-underline shadow-carte transition-transform hover:-translate-y-1 motion-reduce:hover:translate-y-0"
+                      className="flex h-full flex-col gap-2 rounded-carte border border-ligne bg-white p-6 no-underline shadow-carte"
                     >
                       <span className="text-[0.78rem] font-semibold text-canard">{a.categorie}</span>
                       <span className="t-h3">{a.titre}</span>
@@ -107,8 +111,10 @@ export default async function Publications(props: PageProps<"/publications">) {
                         {a.publieAt ? ` · ${formatLong.format(a.publieAt)}` : ""}
                       </span>
                     </Link>
+                    </Eleve>
+                    </Element>
                   ))}
-                </div>
+                </Cascade>
               </section>
             )}
           </>

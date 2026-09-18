@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { Cascade, Element } from "@/components/Animations";
 import { EnTete, Filtre } from "@/components/EnTete";
 import { PiedDePage } from "@/components/PiedDePage";
 import { Bouton } from "@/components/ui/Bouton";
@@ -75,9 +76,10 @@ export default async function Opportunites(props: PageProps<"/opportunites">) {
             </p>
           </div>
         ) : (
-          <ul className="m-0 grid list-none gap-5 pl-0 md:grid-cols-2">
+          <Cascade className="grid gap-5 md:grid-cols-2">
             {liste.map((o) => (
-              <li key={o.id} className="flex flex-col rounded-carte border border-ligne bg-white p-6 shadow-carte">
+              <Element key={o.id}>
+              <article className="flex h-full flex-col rounded-carte border border-ligne bg-white p-6 shadow-carte">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <span className="text-[0.78rem] font-semibold text-canard">
                     {o.nature} · {o.domaine}
@@ -114,9 +116,10 @@ export default async function Opportunites(props: PageProps<"/opportunites">) {
                     </form>
                   )}
                 </div>
-              </li>
+              </article>
+              </Element>
             ))}
-          </ul>
+          </Cascade>
         )}
       </main>
 

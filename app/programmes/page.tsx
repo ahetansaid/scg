@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { Cascade, Element } from "@/components/Animations";
 import { EnTete, Filtre } from "@/components/EnTete";
 import { PiedDePage } from "@/components/PiedDePage";
 import { CarteProgramme } from "@/components/Vitrine";
@@ -121,11 +122,13 @@ export default async function Programmes(props: PageProps<"/programmes">) {
             </p>
           </div>
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <Cascade className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {programmes.map((p) => (
-              <CarteProgramme key={p.slug} programme={p} />
+              <Element key={p.slug}>
+                <CarteProgramme programme={p} />
+              </Element>
             ))}
-          </div>
+          </Cascade>
         )}
       </main>
 

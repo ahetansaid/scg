@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { HeroVisuel, Reveler } from "@/components/Animations";
 import { Cohorte } from "@/components/motifs/Cohorte";
 import { Navigation } from "@/components/Navigation";
 import { PiedDePage } from "@/components/PiedDePage";
@@ -60,7 +61,7 @@ export default async function FicheProgramme(props: PageProps<"/programmes/[slug
           <span className="text-marine">{p.domaine}</span>
         </nav>
 
-        <div className="relative overflow-hidden rounded-grand">
+        <HeroVisuel className="relative overflow-hidden rounded-grand">
           <div className="relative aspect-[16/7] min-h-[260px]">
             <Image src={photoProgramme(p.domaine, p.imageUrl)} alt="" fill sizes="1180px" priority className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-nuit/85 via-nuit/35 to-transparent" />
@@ -79,11 +80,11 @@ export default async function FicheProgramme(props: PageProps<"/programmes/[slug
             </h1>
             {p.accroche && <p className="mt-2 max-w-[56ch] text-white/85">{p.accroche}</p>}
           </div>
-        </div>
+        </HeroVisuel>
       </section>
 
       <main className="mx-auto grid max-w-[1180px] gap-10 px-4 py-10 sm:px-6 md:grid-cols-[1.6fr_1fr] md:py-14">
-        <div>
+        <Reveler>
           {p.description && <p className="max-w-[64ch] text-[1.05rem] leading-relaxed">{p.description}</p>}
 
           {p.objectifs.length > 0 && (
@@ -151,9 +152,10 @@ export default async function FicheProgramme(props: PageProps<"/programmes/[slug
               </ul>
             </section>
           )}
-        </div>
+        </Reveler>
 
         <aside className="md:sticky md:top-6 md:self-start">
+          <Reveler delai={0.12}>
           <div className="rounded-carte border border-ligne bg-white p-6 shadow-carte">
             {s ? (
               <>
@@ -228,6 +230,7 @@ export default async function FicheProgramme(props: PageProps<"/programmes/[slug
               </p>
             )}
           </div>
+          </Reveler>
         </aside>
       </main>
 

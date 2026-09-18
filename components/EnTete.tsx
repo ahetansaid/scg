@@ -1,12 +1,13 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { HeroLigne, HeroTexte, Souligne } from "./Animations";
 import { Navigation } from "./Navigation";
-import { Pastilles } from "./Vitrine";
 
 /* ============================================================================
    En-tête clair des pages intérieures : navigation, fil d'Ariane, titre avec
-   mot souligné, sous-titre, et un emplacement pour les filtres.
+   mot souligné, sous-titre, et un emplacement pour les filtres. Rien d'autre :
+   pas de pastilles ni de trame, la brume et l'arrondi suffisent.
    ============================================================================ */
 
 export function EnTete({
@@ -35,8 +36,6 @@ export function EnTete({
     <>
       <Navigation actif={actif} />
       <section className="relative overflow-hidden bg-brume">
-        <Pastilles />
-        <div aria-hidden="true" className="trame absolute top-6 right-[6%] h-28 w-28 opacity-50" />
         <div className={`mx-auto px-4 pt-10 pb-14 sm:px-6 ${etroit ? "max-w-[720px]" : "max-w-[1180px]"}`}>
           {fil && fil.length > 0 && (
             <nav aria-label="Fil d'Ariane" className="mb-3 text-[0.82rem] text-gris">
@@ -58,20 +57,36 @@ export function EnTete({
               </ol>
             </nav>
           )}
-          {sur && <p className="t-sur mb-2">{sur}</p>}
-          <h1 className="t-hero max-w-[22ch] text-[clamp(2rem,4.6vw,3.2rem)]">
-            {souligne && parties.length === 2 ? (
-              <>
-                {parties[0]}
-                <span className="souligne">{souligne}</span>
-                {parties[1]}
-              </>
-            ) : (
-              titre
+          <HeroTexte>
+            {sur && (
+              <HeroLigne>
+                <p className="t-sur mb-2">{sur}</p>
+              </HeroLigne>
             )}
-          </h1>
-          {sous && <div className="mt-4 max-w-[60ch] text-[1.02rem] text-gris">{sous}</div>}
-          {children && <div className="mt-6">{children}</div>}
+            <HeroLigne>
+              <h1 className="t-hero max-w-[22ch] text-[clamp(2rem,4.6vw,3.2rem)]">
+                {souligne && parties.length === 2 ? (
+                  <>
+                    {parties[0]}
+                    <Souligne>{souligne}</Souligne>
+                    {parties[1]}
+                  </>
+                ) : (
+                  titre
+                )}
+              </h1>
+            </HeroLigne>
+            {sous && (
+              <HeroLigne>
+                <div className="mt-4 max-w-[60ch] text-[1.02rem] text-gris">{sous}</div>
+              </HeroLigne>
+            )}
+            {children && (
+              <HeroLigne>
+                <div className="mt-6">{children}</div>
+              </HeroLigne>
+            )}
+          </HeroTexte>
         </div>
         <div aria-hidden="true" className="absolute inset-x-0 -bottom-px h-8 rounded-t-[100%_100%] bg-white md:h-12" />
       </section>

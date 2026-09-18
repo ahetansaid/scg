@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { Cascade, Element } from "@/components/Animations";
 import { EnTete, Filtre } from "@/components/EnTete";
 import { PiedDePage } from "@/components/PiedDePage";
 import { CarteMentor } from "@/components/Vitrine";
@@ -67,11 +68,13 @@ export default async function Mentorat(props: PageProps<"/mentorat">) {
             </p>
           </div>
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <Cascade className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {mentors.map((m) => (
-              <CarteMentor key={m.slug} mentor={m} />
+              <Element key={m.slug}>
+                <CarteMentor mentor={m} />
+              </Element>
             ))}
-          </div>
+          </Cascade>
         )}
       </main>
 

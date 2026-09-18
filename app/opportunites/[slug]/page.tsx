@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { Reveler } from "@/components/Animations";
 import { EnTete } from "@/components/EnTete";
 import { PiedDePage } from "@/components/PiedDePage";
 import { Bouton } from "@/components/ui/Bouton";
@@ -46,7 +47,7 @@ export default async function Opportunite(props: PageProps<"/opportunites/[slug]
       />
 
       <main className="mx-auto grid max-w-[1180px] gap-10 px-4 py-10 sm:px-6 md:grid-cols-[1.5fr_1fr] md:py-14">
-        <div>
+        <Reveler>
           {o.description && <p className="max-w-[64ch] text-[1.05rem] leading-relaxed">{o.description}</p>}
 
           {o.missions.length > 0 && (
@@ -76,9 +77,10 @@ export default async function Opportunite(props: PageProps<"/opportunites/[slug]
               </ul>
             </section>
           )}
-        </div>
+        </Reveler>
 
         <aside className="md:sticky md:top-6 md:self-start">
+          <Reveler delai={0.12}>
           <div className="rounded-carte border border-ligne bg-white p-6 shadow-carte">
             {o.dateLimite && (
               <>
@@ -109,6 +111,7 @@ export default async function Opportunite(props: PageProps<"/opportunites/[slug]
               )}
             </div>
           </div>
+          </Reveler>
         </aside>
       </main>
 

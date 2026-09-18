@@ -3,11 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { HeroLigne, HeroTexte, HeroVisuel, Reveler } from "@/components/Animations";
 import { Navigation } from "@/components/Navigation";
 import { PiedDePage } from "@/components/PiedDePage";
 import { Bouton, BoutonLien } from "@/components/ui/Bouton";
 import { Alerte, Champ, ChampTexte, classeLabel } from "@/components/ui/Champ";
-import { Pastilles } from "@/components/Vitrine";
 import { utilisateurCourant } from "@/lib/auth";
 import { demandesOuvertes, DEMANDES_OUVERTES_MAX, trouverMentor } from "@/lib/mentorat";
 import { portrait } from "@/lib/photos";
@@ -57,12 +57,12 @@ export default async function FicheMentor(props: PageProps<"/mentorat/[slug]">) 
       <Navigation actif="/mentorat" />
 
       <section className="relative overflow-hidden bg-brume">
-        <Pastilles />
         <div className="mx-auto flex max-w-[1180px] flex-wrap items-center gap-8 px-4 pt-10 pb-14 sm:px-6">
-          <span className="relative block size-32 shrink-0 overflow-hidden rounded-full ring-8 ring-white shadow-carte md:size-40">
+          <HeroVisuel className="relative block size-32 shrink-0 overflow-hidden rounded-full ring-8 ring-white shadow-carte md:size-40">
             <Image src={portrait(m.slug, m.avatarUrl)} alt="" fill sizes="160px" className="object-cover" priority />
-          </span>
-          <div>
+          </HeroVisuel>
+          <HeroTexte>
+            <HeroLigne>
             <nav aria-label="Fil d'Ariane" className="mb-2 text-[0.82rem] text-gris">
               <Link href="/mentorat" className="no-underline hover:text-canard">
                 Réseau de mentors
@@ -82,13 +82,14 @@ export default async function FicheMentor(props: PageProps<"/mentorat/[slug]">) 
                 ))}
               </div>
             )}
-          </div>
+            </HeroLigne>
+          </HeroTexte>
         </div>
         <div aria-hidden="true" className="absolute inset-x-0 -bottom-px h-8 rounded-t-[100%_100%] bg-white md:h-12" />
       </section>
 
       <main className="mx-auto grid max-w-[1180px] gap-10 px-4 py-10 sm:px-6 md:grid-cols-[1.5fr_1fr] md:py-14">
-        <div>
+        <Reveler>
           {m.presentation && <p className="max-w-[64ch] text-[1.05rem] leading-relaxed">{m.presentation}</p>}
 
           <h2 className="t-h2 mt-10 text-[1.5rem]">Comment ça se passe</h2>
@@ -204,9 +205,10 @@ export default async function FicheMentor(props: PageProps<"/mentorat/[slug]">) 
               </form>
             )}
           </div>
-        </div>
+        </Reveler>
 
         <aside className="md:sticky md:top-6 md:self-start">
+          <Reveler delai={0.12}>
           <div className="rounded-carte border border-ligne bg-white p-6 shadow-carte">
             <p className="text-[0.78rem] font-semibold text-canard">Disponibilité</p>
             {m.creneauxLibres > 0 ? (
@@ -224,6 +226,7 @@ export default async function FicheMentor(props: PageProps<"/mentorat/[slug]">) 
               garantit qu&apos;une demande acceptée reçoit vraiment du temps.
             </p>
           </div>
+          </Reveler>
         </aside>
       </main>
 

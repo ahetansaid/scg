@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Reveler } from "@/components/Animations";
 import { EnTete } from "@/components/EnTete";
 import { CABINET, PiedDePage } from "@/components/PiedDePage";
 import { Bouton } from "@/components/ui/Bouton";
@@ -44,7 +45,7 @@ export default async function Contact(props: PageProps<"/contact">) {
       />
 
       <main className="mx-auto grid max-w-[1180px] gap-10 px-4 py-10 sm:px-6 md:grid-cols-[1.5fr_1fr] md:py-14">
-        <div>
+        <Reveler>
           {envoye && (
             <Alerte nature="succes">
               <strong className="font-semibold">Message envoyé.</strong> Nous vous répondons sous 72 heures
@@ -71,9 +72,9 @@ export default async function Contact(props: PageProps<"/contact">) {
               <p className="text-[0.82rem] text-gris">Vos coordonnées servent uniquement à vous répondre.</p>
             </div>
           </form>
-        </div>
+        </Reveler>
 
-        <aside className="flex flex-col gap-5 md:self-start">
+        <Reveler delai={0.12} className="flex flex-col gap-5 md:self-start">
           <div className="rounded-carte bg-pastel-ciel p-6">
             <p className="text-[0.78rem] font-semibold text-canard">Nous joindre directement</p>
             <address className="mt-3 flex flex-col gap-4 text-[0.95rem] not-italic">
@@ -104,7 +105,7 @@ export default async function Contact(props: PageProps<"/contact">) {
               en quelques jours.
             </p>
           </div>
-        </aside>
+        </Reveler>
       </main>
 
       <PiedDePage />

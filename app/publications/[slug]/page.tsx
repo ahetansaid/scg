@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { Reveler } from "@/components/Animations";
 import { Corps } from "@/components/Blocs";
 import { EnTete } from "@/components/EnTete";
 import { PiedDePage } from "@/components/PiedDePage";
@@ -49,6 +50,7 @@ export default async function Article(props: PageProps<"/publications/[slug]">) 
       />
 
       <main className="mx-auto max-w-[760px] px-4 py-10 sm:px-6 md:py-14">
+        <Reveler>
         {a.blocs.length > 0 ? (
           <Corps blocs={a.blocs} />
         ) : (
@@ -59,6 +61,7 @@ export default async function Article(props: PageProps<"/publications/[slug]">) 
             ← Toutes les publications
           </Link>
         </p>
+        </Reveler>
       </main>
 
       <PiedDePage />
