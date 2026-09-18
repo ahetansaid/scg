@@ -43,3 +43,7 @@ next-env.d.ts
 
 .vercel
 .env*
+
+# outillage d'agents deposé par les CLI (Neon, Vercel)
+.agents/
+.claude/skills/
