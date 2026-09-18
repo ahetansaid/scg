@@ -35,6 +35,8 @@ export default async function Opportunite(props: PageProps<"/opportunites/[slug]
   return (
     <>
       <EnTete
+        sombre
+        actif="/opportunites"
         fil={[{ href: "/opportunites", libelle: "Opportunités" }]}
         sur={`${o.nature} · ${o.domaine}`}
         titre={o.titre}

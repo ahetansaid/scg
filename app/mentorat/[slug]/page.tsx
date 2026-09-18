@@ -10,7 +10,7 @@ import { Bouton, BoutonLien } from "@/components/ui/Bouton";
 import { Alerte, Champ, ChampTexte, classeLabel } from "@/components/ui/Champ";
 import { utilisateurCourant } from "@/lib/auth";
 import { demandesOuvertes, DEMANDES_OUVERTES_MAX, trouverMentor } from "@/lib/mentorat";
-import { portrait } from "@/lib/photos";
+import { PHOTOS, portrait } from "@/lib/photos";
 import { formatDateHeure, LIBELLE_FORMAT, pluriel } from "@/lib/vocabulaire";
 
 import { envoyerDemande } from "../actions";
@@ -56,36 +56,49 @@ export default async function FicheMentor(props: PageProps<"/mentorat/[slug]">) 
     <>
       <Navigation actif="/mentorat" />
 
-      <section className="relative overflow-hidden bg-brume">
-        <div className="mx-auto flex max-w-[1180px] flex-wrap items-center gap-8 px-4 pt-10 pb-14 sm:px-6">
-          <HeroVisuel className="relative block size-32 shrink-0 overflow-hidden rounded-full ring-8 ring-white shadow-carte md:size-40">
-            <Image src={portrait(m.slug, m.avatarUrl)} alt="" fill sizes="160px" className="object-cover" priority />
-          </HeroVisuel>
-          <HeroTexte>
-            <HeroLigne>
-            <nav aria-label="Fil d'Ariane" className="mb-2 text-[0.82rem] text-gris">
-              <Link href="/mentorat" className="no-underline hover:text-canard">
-                Réseau de mentors
-              </Link>
-            </nav>
-            <h1 className="t-hero text-[clamp(1.9rem,4.2vw,3rem)]">{m.nomComplet}</h1>
-            <p className="mt-1.5 text-[1.05rem] text-gris">
-              {m.titre}
-              {m.organisation ? ` · ${m.organisation}` : ""}
-            </p>
-            {m.domaines.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-1.5">
+      <section className="px-3 pt-3 sm:px-4">
+        <div className="relative mx-auto overflow-hidden rounded-grand bg-nuit text-white">
+          {/* La photo du réseau en fond, très voilée : c'est le portrait qui compte. */}
+          <Image src={PHOTOS.reunion} alt="" fill sizes="(max-width: 1400px) 100vw, 1400px" className="object-cover opacity-40" />
+          <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-nuit via-nuit/85 to-marine/60" />
+
+          <div className="relative mx-auto flex max-w-[1180px] flex-wrap items-center gap-8 p-6 pt-20 sm:p-10 md:px-14 md:py-16 md:pt-24">
+            <HeroVisuel className="relative block size-36 shrink-0 overflow-hidden rounded-full ring-4 ring-white/20 shadow-flottant md:size-48">
+              <Image src={portrait(m.slug, m.avatarUrl)} alt="" fill sizes="192px" className="object-cover" priority />
+            </HeroVisuel>
+            <HeroTexte>
+              <HeroLigne>
+                <nav aria-label="Fil d'Ariane" className="mb-3 text-[0.82rem] text-white/70">
+                  <Link href="/mentorat" className="no-underline hover:text-white">
+                    Réseau de mentors
+                  </Link>
+                </nav>
+              </HeroLigne>
+              <HeroLigne>
+                <h1 className="t-hero t-clair text-[clamp(1.9rem,4.2vw,3.2rem)]">{m.nomComplet}</h1>
+              </HeroLigne>
+              <HeroLigne>
+                <p className="mt-2 text-[1.08rem] text-white/80">
+                  {m.titre}
+                  {m.organisation ? ` · ${m.organisation}` : ""}
+                </p>
+              </HeroLigne>
+              <HeroLigne className="mt-5 flex flex-wrap items-center gap-2">
                 {m.domaines.map((d) => (
-                  <span key={d} className="rounded-full bg-pastel-ciel px-3 py-1 text-[0.78rem] font-semibold text-marine">
+                  <span key={d} className="rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[0.78rem] font-semibold backdrop-blur-md">
                     {d}
                   </span>
                 ))}
-              </div>
-            )}
-            </HeroLigne>
-          </HeroTexte>
+                <span className={`ml-1 inline-flex items-center gap-2 text-[0.84rem] font-semibold ${m.creneauxLibres > 0 ? "text-soleil" : "text-white/60"}`}>
+                  <span aria-hidden="true" className={`inline-block size-2 rounded-full ${m.creneauxLibres > 0 ? "bg-soleil" : "bg-white/40"}`} />
+                  {m.creneauxLibres > 0
+                    ? `${m.creneauxLibres} ${pluriel(m.creneauxLibres, "créneau", "créneaux")} ${pluriel(m.creneauxLibres, "ouvert")} ce mois`
+                    : "Sur demande"}
+                </span>
+              </HeroLigne>
+            </HeroTexte>
+          </div>
         </div>
-        <div aria-hidden="true" className="absolute inset-x-0 -bottom-px h-8 rounded-t-[100%_100%] bg-white md:h-12" />
       </section>
 
       <main className="mx-auto grid max-w-[1180px] gap-10 px-4 py-10 sm:px-6 md:grid-cols-[1.5fr_1fr] md:py-14">

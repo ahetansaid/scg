@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { EnTete } from "@/components/EnTete";
-import { PiedDePage } from "@/components/PiedDePage";
+import { PageCompte } from "@/components/Compte";
 import { Bouton } from "@/components/ui/Bouton";
 import { Alerte, Champ } from "@/components/ui/Champ";
 import { utilisateurCourant } from "@/lib/auth";
+import { PHOTOS } from "@/lib/photos";
 
 import { seConnecter } from "../actions";
 
@@ -30,10 +30,15 @@ export default async function Connexion(props: PageProps<"/connexion">) {
   const suite = lire("suite") ?? "/espace";
 
   return (
-    <>
-      <EnTete etroit sur="Espace membre" titre="Bon retour" souligne="retour" sous="Connectez-vous pour retrouver vos programmes, vos demandes de mentorat et vos certificats." />
-
-      <main className="mx-auto max-w-[520px] px-4 py-10 sm:px-6 md:py-14">
+    <PageCompte
+      actif="/connexion"
+      sur="Espace membre"
+      titre="Bon retour"
+      souligne="retour"
+      sous="Connectez-vous pour retrouver vos programmes, vos demandes de mentorat et vos certificats."
+      photo={PHOTOS.dirigeante}
+    >
+      <div>
         {erreur && <Alerte nature="erreur">{ERREURS[erreur] ?? "La connexion a échoué."}</Alerte>}
 
         <form action={seConnecter} className="flex flex-col gap-4 rounded-carte border border-ligne bg-white p-6 shadow-carte md:p-8">
@@ -51,9 +56,7 @@ export default async function Connexion(props: PageProps<"/connexion">) {
             En créer un
           </Link>
         </p>
-      </main>
-
-      <PiedDePage />
-    </>
+      </div>
+    </PageCompte>
   );
 }

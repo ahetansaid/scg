@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
-import { Cascade, Element, Eleve } from "@/components/Animations";
+import { Cascade, Element, Eleve, Reveler } from "@/components/Animations";
 import { EnTete, Filtre } from "@/components/EnTete";
 import { PiedDePage } from "@/components/PiedDePage";
 import { TitreSection } from "@/components/Vitrine";
@@ -29,6 +30,7 @@ export default async function Publications(props: PageProps<"/publications">) {
   ]);
 
   const vide = articles.length === 0 && rapports.length === 0;
+  const [vedette, ...reste] = articles as [(typeof articles)[number], ...typeof articles];
 
   return (
     <>
@@ -97,26 +99,70 @@ export default async function Publications(props: PageProps<"/publications">) {
             {articles.length > 0 && (
               <section>
                 <TitreSection titre="Notes et tribunes" />
-                <Cascade className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                  {articles.map((a) => (
-                    <Element key={a.slug}>
-                    <Eleve className="h-full">
+
+                {/* La dernière parution occupe toute la largeur. */}
+                <Reveler>
+                  <Eleve>
                     <Link
-                      href={`/publications/${a.slug}`}
-                      className="flex h-full flex-col gap-2 rounded-carte border border-ligne bg-white p-6 no-underline shadow-carte"
+                      href={`/publications/${vedette.slug}`}
+                      className="grid overflow-hidden rounded-grand border border-ligne bg-white no-underline shadow-carte md:grid-cols-[1.3fr_1fr]"
                     >
-                      <span className="text-[0.78rem] font-semibold text-canard">{a.categorie}</span>
-                      <span className="t-h3">{a.titre}</span>
-                      {a.chapo && <span className="line-clamp-3 text-[0.88rem] text-gris">{a.chapo}</span>}
-                      <span className="mt-auto pt-3 text-[0.8rem] text-gris">
-                        {a.minutesLecture > 0 ? `${a.minutesLecture} min de lecture` : ""}
-                        {a.publieAt ? ` · ${formatLong.format(a.publieAt)}` : ""}
+                      <span className="flex flex-col p-7 md:p-10">
+                        <span className="flex items-center gap-3 text-[0.78rem] font-semibold">
+                          <span className="rounded-full bg-pastel-canard px-2.5 py-1 text-canard-fonce">{vedette.categorie}</span>
+                          <span className="text-gris">Dernière parution</span>
+                        </span>
+                        <span className="t-h2 mt-4 text-[clamp(1.5rem,2.8vw,2.1rem)]">{vedette.titre}</span>
+                        {vedette.chapo && <span className="mt-3 max-w-[56ch] text-[0.98rem] text-gris">{vedette.chapo}</span>}
+                        <span className="mt-auto flex items-center gap-2 pt-6 text-[0.84rem] font-semibold text-marine">
+                          Lire la note <span aria-hidden="true">→</span>
+                          <span className="ml-auto font-normal text-gris">
+                            {vedette.minutesLecture > 0 ? `${vedette.minutesLecture} min` : ""}
+                            {vedette.publieAt ? ` · ${formatLong.format(vedette.publieAt)}` : ""}
+                          </span>
+                        </span>
+                      </span>
+                      <span className="relative min-h-[220px] bg-pastel-ciel">
+                        <Image src={PHOTOS.portrait} alt="" fill sizes="(max-width: 768px) 100vw, 460px" className="object-cover" />
                       </span>
                     </Link>
-                    </Eleve>
-                    </Element>
-                  ))}
-                </Cascade>
+                  </Eleve>
+                </Reveler>
+
+                {reste.length > 0 && (
+                  <Cascade className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    {reste.map((a, i) => (
+                      <Element key={a.slug}>
+                        <Eleve className="h-full">
+                          <Link
+                            href={`/publications/${a.slug}`}
+                            className="flex h-full flex-col gap-3 rounded-carte border border-ligne bg-white p-6 no-underline shadow-carte"
+                          >
+                            <span className="flex items-center justify-between">
+                              <span className="rounded-full bg-pastel-canard px-2.5 py-1 text-[0.74rem] font-bold text-canard-fonce">
+                                {a.categorie}
+                              </span>
+                              <span className="t-chiffres text-[0.78rem] font-semibold text-gris-clair">
+                                {String(i + 2).padStart(2, "0")}
+                              </span>
+                            </span>
+                            <span className="t-h3">{a.titre}</span>
+                            {a.chapo && <span className="line-clamp-3 text-[0.88rem] text-gris">{a.chapo}</span>}
+                            <span className="mt-auto flex items-center justify-between pt-3 text-[0.8rem] text-gris">
+                              <span>
+                                {a.minutesLecture > 0 ? `${a.minutesLecture} min de lecture` : ""}
+                                {a.publieAt ? ` · ${formatLong.format(a.publieAt)}` : ""}
+                              </span>
+                              <span aria-hidden="true" className="font-semibold text-marine">
+                                →
+                              </span>
+                            </span>
+                          </Link>
+                        </Eleve>
+                      </Element>
+                    ))}
+                  </Cascade>
+                )}
               </section>
             )}
           </>

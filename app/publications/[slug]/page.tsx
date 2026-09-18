@@ -33,6 +33,7 @@ export default async function Article(props: PageProps<"/publications/[slug]">) 
   return (
     <>
       <EnTete
+        sombre
         actif="/publications"
         fil={[{ href: "/publications", libelle: "Publications" }]}
         sur={a.categorie}

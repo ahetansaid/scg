@@ -38,7 +38,7 @@ export default async function Contact(props: PageProps<"/contact">) {
   return (
     <>
       <EnTete
-        photo={PHOTOS.dirigeante}
+        photo={PHOTOS.portrait}
         actif="/contact"
         sur="Contact"
         titre="Dites-nous ce que vous cherchez"

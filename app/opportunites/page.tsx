@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { Cascade, Element } from "@/components/Animations";
+import { Cascade, Element, Reveler } from "@/components/Animations";
 import { EnTete, Filtre } from "@/components/EnTete";
 import { PiedDePage } from "@/components/PiedDePage";
-import { Bouton } from "@/components/ui/Bouton";
+import { Bouton, BoutonLien } from "@/components/ui/Bouton";
 import { PHOTOS } from "@/lib/photos";
 import { utilisateurCourant } from "@/lib/auth";
 import { mesFavoris } from "@/lib/espace";
@@ -124,6 +124,24 @@ export default async function Opportunites(props: PageProps<"/opportunites">) {
           </Cascade>
         )}
       </main>
+
+      <section className="mx-auto max-w-[1180px] px-4 pb-14 sm:px-6 md:pb-20">
+        <Reveler>
+          <div className="grid items-center gap-6 rounded-grand bg-pastel-soleil p-8 md:grid-cols-[1.4fr_auto] md:p-12">
+            <div>
+              <p className="t-sur">Vous recrutez, vous financez, vous lancez un appel</p>
+              <h2 className="t-h2 mt-2">Signalez-nous une opportunité</h2>
+              <p className="mt-3 max-w-[52ch] text-gris">
+                Postes de direction, appels à projets, financements, programmes d&apos;accélération : nous relayons
+                ce qui concerne les dirigeants et cadres de la sous-région, après vérification.
+              </p>
+            </div>
+            <BoutonLien href="/contact?sujet=Signaler%20une%20opportunit%C3%A9" variante="canard" taille="lg">
+              Nous écrire
+            </BoutonLien>
+          </div>
+        </Reveler>
+      </section>
 
       <PiedDePage />
     </>

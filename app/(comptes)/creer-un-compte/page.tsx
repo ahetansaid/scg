@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { EnTete } from "@/components/EnTete";
-import { PiedDePage } from "@/components/PiedDePage";
+import { PageCompte } from "@/components/Compte";
 import { Bouton } from "@/components/ui/Bouton";
 import { Alerte, Champ, PiegeRobots } from "@/components/ui/Champ";
 import { utilisateurCourant } from "@/lib/auth";
+import { PHOTOS } from "@/lib/photos";
 
 import { creerMonCompte } from "../actions";
 
@@ -28,16 +28,15 @@ export default async function CreerUnCompte(props: PageProps<"/creer-un-compte">
   const erreur = Array.isArray(v) ? v[0] : v;
 
   return (
-    <>
-      <EnTete
-        etroit
-        sur="Espace membre"
-        titre="Créer votre compte"
-        souligne="compte"
-        sous="Gratuit. Il vous permet de vous inscrire aux sessions, de suivre votre progression et de solliciter un mentor."
-      />
-
-      <main className="mx-auto max-w-[640px] px-4 py-10 sm:px-6 md:py-14">
+    <PageCompte
+      actif="/creer-un-compte"
+      sur="Espace membre"
+      titre="Créer votre compte"
+      souligne="compte"
+      sous="Gratuit. Il vous permet de vous inscrire aux sessions, de suivre votre progression et de solliciter un mentor."
+      photo={PHOTOS.dirigeant}
+    >
+      <div>
         {erreur && <Alerte nature="erreur">{ERREURS[erreur] ?? "La création du compte a échoué."}</Alerte>}
 
         <form action={creerMonCompte} className="flex flex-col gap-4 rounded-carte border border-ligne bg-white p-6 shadow-carte md:p-8">
@@ -77,9 +76,7 @@ export default async function CreerUnCompte(props: PageProps<"/creer-un-compte">
             Se connecter
           </Link>
         </p>
-      </main>
-
-      <PiedDePage />
-    </>
+      </div>
+    </PageCompte>
   );
 }

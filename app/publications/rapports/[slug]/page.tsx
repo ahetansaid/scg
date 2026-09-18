@@ -30,6 +30,7 @@ export default async function Rapport(props: PageProps<"/publications/rapports/[
   return (
     <>
       <EnTete
+        sombre
         actif="/publications"
         fil={[{ href: "/publications", libelle: "Publications" }]}
         sur="Rapport"

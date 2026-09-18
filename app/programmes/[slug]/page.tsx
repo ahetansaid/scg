@@ -3,15 +3,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { HeroVisuel, Reveler } from "@/components/Animations";
+import { Cascade, Element, HeroLigne, HeroTexte, HeroVisuel, Reveler } from "@/components/Animations";
 import { Cohorte } from "@/components/motifs/Cohorte";
 import { Navigation } from "@/components/Navigation";
 import { PiedDePage } from "@/components/PiedDePage";
 import { BoutonLien } from "@/components/ui/Bouton";
+import { CarteProgramme, TitreSection } from "@/components/Vitrine";
 import { Etiquette } from "@/components/ui/Etiquette";
-import { derouleProgramme, slugsProgrammes, trouverProgramme } from "@/lib/catalogue";
+import { derouleProgramme, listerProgrammes, slugsProgrammes, trouverProgramme } from "@/lib/catalogue";
 import { photoProgramme } from "@/lib/photos";
-import { formatLong, LIBELLE_FORMAT, LIBELLE_NATURE, montant, pluriel } from "@/lib/vocabulaire";
+import { dateCourte, formatLong, LIBELLE_FORMAT, LIBELLE_NATURE, montant, pluriel } from "@/lib/vocabulaire";
 
 export const revalidate = 600;
 
@@ -38,49 +39,88 @@ export default async function FicheProgramme(props: PageProps<"/programmes/[slug
   const p = await trouverProgramme(slug);
   if (!p) notFound();
 
-  const modules = await derouleProgramme(p.id);
+  const [modules, voisins] = await Promise.all([
+    derouleProgramme(p.id),
+    listerProgrammes({ domaine: p.domaine }).then((l) => l.filter((v) => v.slug !== p.slug).slice(0, 3)),
+  ]);
   const s = p.prochaine;
   const marque = s ? ETAT[s.etat] : null;
+  const nbSeances = modules.reduce((n, m) => n + m.seances.length, 0);
+
+  /* Les repères posés sur le bandeau : ce qu'on veut savoir avant de lire. */
+  const reperes = [
+    p.dureeLibelle && { libelle: "Durée", valeur: p.dureeLibelle },
+    { libelle: "Format", valeur: LIBELLE_FORMAT[p.format] },
+    s?.lieu && { libelle: "Lieu", valeur: s.lieu },
+    s && { libelle: "Prochaine date", valeur: dateCourte(s.debut) },
+    nbSeances > 0 && { libelle: "Séances", valeur: String(nbSeances) },
+  ].filter((r): r is { libelle: string; valeur: string } => Boolean(r));
 
   return (
     <>
       <Navigation actif="/programmes" />
 
-      {/* Bandeau : vignette large avec le titre par-dessus, comme une carte
-          de cours agrandie. */}
-      <section className="mx-auto max-w-[1180px] px-4 pt-6 sm:px-6">
-        <nav aria-label="Fil d'Ariane" className="mb-4 text-[0.82rem] text-gris">
-          <Link href="/" className="no-underline hover:text-canard">
-            Accueil
-          </Link>
-          <span className="mx-1.5">/</span>
-          <Link href="/programmes" className="no-underline hover:text-canard">
-            Programmes
-          </Link>
-          <span className="mx-1.5">/</span>
-          <span className="text-marine">{p.domaine}</span>
-        </nav>
+      {/* Bandeau : le cadre sombre de l'accueil, avec la vignette du
+          programme et les repères essentiels posés en bas. */}
+      <section className="px-3 pt-3 sm:px-4">
+        <div className="relative mx-auto flex min-h-[460px] max-w-[1400px] flex-col justify-end overflow-hidden rounded-grand bg-nuit text-white md:min-h-[540px]">
+          <HeroVisuel className="absolute inset-0">
+            <Image src={photoProgramme(p.domaine, p.imageUrl)} alt="" fill sizes="(max-width: 1400px) 100vw, 1400px" priority className="object-cover" />
+          </HeroVisuel>
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-[linear-gradient(90deg,rgba(6,24,47,.9)_0%,rgba(6,24,47,.55)_55%,rgba(6,24,47,.3)_100%)]"
+          />
+          <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-nuit/95 to-transparent" />
 
-        <HeroVisuel className="relative overflow-hidden rounded-grand">
-          <div className="relative aspect-[16/7] min-h-[260px]">
-            <Image src={photoProgramme(p.domaine, p.imageUrl)} alt="" fill sizes="1180px" priority className="object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-nuit/85 via-nuit/35 to-transparent" />
+          <div className="relative p-6 pt-24 sm:p-10 md:p-14 md:pt-28">
+            <HeroTexte>
+              <HeroLigne>
+                <nav aria-label="Fil d'Ariane" className="mb-4 text-[0.82rem] text-white/70">
+                  <Link href="/" className="no-underline hover:text-white">
+                    Accueil
+                  </Link>
+                  <span className="mx-1.5">/</span>
+                  <Link href="/programmes" className="no-underline hover:text-white">
+                    Programmes
+                  </Link>
+                  <span className="mx-1.5">/</span>
+                  <Link href={`/programmes?domaine=${encodeURIComponent(p.domaine)}`} className="no-underline hover:text-white">
+                    {p.domaine}
+                  </Link>
+                </nav>
+              </HeroLigne>
+              <HeroLigne className="flex flex-wrap items-center gap-2">
+                <span className="rounded-full bg-canard px-2.5 py-1 text-[0.7rem] font-bold tracking-wide uppercase">
+                  {LIBELLE_NATURE[p.nature]}
+                </span>
+                {marque && (
+                  <span className="rounded-full border border-white/25 bg-white/10 px-2.5 py-1 text-[0.72rem] font-semibold backdrop-blur-md">
+                    {marque.texte}
+                  </span>
+                )}
+              </HeroLigne>
+              <HeroLigne>
+                <h1 className="t-hero t-clair mt-4 max-w-[18ch] text-[clamp(2rem,4.6vw,3.4rem)]">{p.titre}</h1>
+              </HeroLigne>
+              {p.accroche && (
+                <HeroLigne>
+                  <p className="mt-4 max-w-[56ch] text-[1.05rem] text-white/80">{p.accroche}</p>
+                </HeroLigne>
+              )}
+              {reperes.length > 0 && (
+                <HeroLigne className="mt-8 flex flex-wrap gap-2.5">
+                  {reperes.map((r) => (
+                    <span key={r.libelle} className="rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-[0.82rem] backdrop-blur-md">
+                      <span className="text-white/60">{r.libelle} · </span>
+                      <span className="font-semibold">{r.valeur}</span>
+                    </span>
+                  ))}
+                </HeroLigne>
+              )}
+            </HeroTexte>
           </div>
-          <div className="absolute inset-x-0 bottom-0 p-6 text-white md:p-10">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-canard px-2.5 py-1 text-[0.7rem] font-bold tracking-wide uppercase">
-                {LIBELLE_NATURE[p.nature]}
-              </span>
-              <span className="rounded-full bg-white/15 px-2.5 py-1 text-[0.72rem] font-semibold backdrop-blur">
-                {p.domaine}
-              </span>
-            </div>
-            <h1 className="mt-3 max-w-[22ch] text-[clamp(1.7rem,4vw,2.8rem)] leading-tight font-extrabold tracking-[-0.025em]">
-              {p.titre}
-            </h1>
-            {p.accroche && <p className="mt-2 max-w-[56ch] text-white/85">{p.accroche}</p>}
-          </div>
-        </HeroVisuel>
+        </div>
       </section>
 
       <main className="mx-auto grid max-w-[1180px] gap-10 px-4 py-10 sm:px-6 md:grid-cols-[1.6fr_1fr] md:py-14">
@@ -88,7 +128,7 @@ export default async function FicheProgramme(props: PageProps<"/programmes/[slug
           {p.description && <p className="max-w-[64ch] text-[1.05rem] leading-relaxed">{p.description}</p>}
 
           {p.objectifs.length > 0 && (
-            <section className="mt-10">
+            <section className="mt-12">
               <h2 className="t-h2 text-[1.5rem]">Ce que vous en repartez avec</h2>
               <ul className="mt-4 grid list-none gap-3 pl-0 sm:grid-cols-2">
                 {p.objectifs.map((o) => (
@@ -106,41 +146,45 @@ export default async function FicheProgramme(props: PageProps<"/programmes/[slug
           )}
 
           {modules.length > 0 && (
-            <section className="mt-10">
+            <section className="mt-12">
               <h2 className="t-h2 text-[1.5rem]">Le déroulé</h2>
-              <div className="mt-4 flex flex-col gap-3">
-                {modules.map((m) => (
-                  <details key={m.id} open className="group rounded-carte border border-ligne bg-white">
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4">
-                      <span>
-                        <span className="t-h3">{m.titre}</span>
-                        {m.resume && <span className="mt-0.5 block text-[0.86rem] text-gris">{m.resume}</span>}
-                      </span>
-                      <span className="text-[0.8rem] font-semibold whitespace-nowrap text-gris">
-                        {m.seances.length} {pluriel(m.seances.length, "séance")}
-                      </span>
-                    </summary>
-                    <ol className="m-0 flex list-none flex-col border-t border-ligne pl-0">
-                      {m.seances.map((seance, i) => (
-                        <li key={seance.id} className="flex items-center gap-4 border-b border-ligne px-5 py-3 last:border-b-0">
-                          <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-pastel-ciel text-[0.8rem] font-bold text-marine">
-                            {m.debut + i + 1}
-                          </span>
-                          <span className="flex-1 text-[0.95rem]">{seance.titre}</span>
-                          {seance.dureeMinutes > 0 && (
-                            <span className="text-[0.8rem] text-gris">{Math.round(seance.dureeMinutes / 60)} h</span>
-                          )}
-                        </li>
-                      ))}
-                    </ol>
-                  </details>
+              <p className="mt-1 text-[0.9rem] text-gris">
+                {modules.length} {pluriel(modules.length, "module")} · {nbSeances} {pluriel(nbSeances, "séance")}
+              </p>
+              <ol className="relative mt-6 m-0 flex list-none flex-col gap-8 border-l-2 border-ligne pl-0">
+                {modules.map((m, im) => (
+                  <li key={m.id} className="relative pl-8">
+                    <span
+                      aria-hidden="true"
+                      className="t-chiffres absolute top-0 -left-[19px] flex size-9 items-center justify-center rounded-full bg-marine text-[0.8rem] font-bold text-white ring-4 ring-white"
+                    >
+                      {String(im + 1).padStart(2, "0")}
+                    </span>
+                    <div className="pt-1.5">
+                      <h3 className="t-h3">{m.titre}</h3>
+                      {m.resume && <p className="mt-1 text-[0.9rem] text-gris">{m.resume}</p>}
+                    </div>
+                    {m.seances.length > 0 && (
+                      <ul className="mt-3 flex list-none flex-col gap-1.5 pl-0">
+                        {m.seances.map((seance, i) => (
+                          <li key={seance.id} className="flex items-center gap-3 rounded-[14px] bg-brume px-4 py-2.5 text-[0.92rem]">
+                            <span className="t-chiffres w-6 shrink-0 text-[0.78rem] font-bold text-canard">{m.debut + i + 1}</span>
+                            <span className="flex-1">{seance.titre}</span>
+                            {seance.dureeMinutes > 0 && (
+                              <span className="text-[0.78rem] text-gris">{Math.round(seance.dureeMinutes / 60)} h</span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
                 ))}
-              </div>
+              </ol>
             </section>
           )}
 
           {p.prerequis.length > 0 && (
-            <section className="mt-10">
+            <section className="mt-12">
               <h2 className="t-h2 text-[1.5rem]">Pour qui</h2>
               <ul className="mt-4 flex list-none flex-col gap-2 pl-0 text-[0.95rem] text-gris">
                 {p.prerequis.map((r) => (
@@ -233,6 +277,30 @@ export default async function FicheProgramme(props: PageProps<"/programmes/[slug
           </Reveler>
         </aside>
       </main>
+
+      {voisins.length > 0 && (
+        <section className="bg-brume">
+          <div className="mx-auto max-w-[1180px] px-4 py-14 sm:px-6 md:py-20">
+            <TitreSection
+              sur={p.domaine}
+              titre="Dans le même domaine"
+              souligne="même domaine"
+              action={
+                <BoutonLien href={`/programmes?domaine=${encodeURIComponent(p.domaine)}`} variante="contour" taille="sm">
+                  Tout le domaine
+                </BoutonLien>
+              }
+            />
+            <Cascade className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {voisins.map((v) => (
+                <Element key={v.slug}>
+                  <CarteProgramme programme={v} />
+                </Element>
+              ))}
+            </Cascade>
+          </div>
+        </section>
+      )}
 
       <PiedDePage />
     </>
