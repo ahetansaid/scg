@@ -61,55 +61,6 @@ export function TitreSection({
 /* --- Puces de domaine ------------------------------------------------------ */
 
 const ICONES: Record<string, { fond: string; encre: string; icone: ReactNode }> = {
-  Finance: {
-    fond: "bg-pastel-soleil",
-    encre: "text-[#b7791f]",
-    icone: (
-      <path d="M4 19h16M6 16V9m4 7V5m4 11v-6m4 6V7" strokeLinecap="round" strokeLinejoin="round" />
-    ),
-  },
-  Stratégie: {
-    fond: "bg-pastel-violet",
-    encre: "text-violet",
-    icone: (
-      <>
-        <circle cx="12" cy="12" r="9" />
-        <circle cx="12" cy="12" r="4.5" />
-        <circle cx="12" cy="12" r="1" fill="currentColor" />
-      </>
-    ),
-  },
-  "Secteur public": {
-    fond: "bg-pastel-ciel",
-    encre: "text-marine",
-    icone: (
-      <path
-        d="M3 21h18M5 21V10m14 11V10M3 10l9-6 9 6M8 21v-6h8v6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    ),
-  },
-  Digital: {
-    fond: "bg-pastel-canard",
-    encre: "text-canard-fonce",
-    icone: (
-      <>
-        <rect x="3" y="4" width="18" height="12" rx="2" />
-        <path d="M8 20h8m-4-4v4" strokeLinecap="round" />
-      </>
-    ),
-  },
-  "Ressources humaines": {
-    fond: "bg-pastel-corail",
-    encre: "text-corail",
-    icone: (
-      <>
-        <circle cx="9" cy="8" r="3.5" />
-        <path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4.5-6.2" strokeLinecap="round" />
-      </>
-    ),
-  },
   Entrepreneuriat: {
     fond: "bg-pastel-mandarine",
     encre: "text-mandarine",
@@ -121,10 +72,30 @@ const ICONES: Record<string, { fond: string; encre: string; icone: ReactNode }> 
       />
     ),
   },
+  Numérique: {
+    fond: "bg-pastel-canard",
+    encre: "text-canard-fonce",
+    icone: (
+      <>
+        <rect x="3" y="4" width="18" height="12" rx="2" />
+        <path d="M8 20h8m-4-4v4" strokeLinecap="round" />
+      </>
+    ),
+  },
+  "Gouvernance de l'internet": {
+    fond: "bg-pastel-ciel",
+    encre: "text-marine",
+    icone: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18" strokeLinecap="round" />
+      </>
+    ),
+  },
 };
 
 export function PuceDomaine({ domaine, href }: { domaine: string; href: string }) {
-  const d = ICONES[domaine] ?? ICONES["Stratégie"]!;
+  const d = ICONES[domaine] ?? ICONES["Numérique"]!;
   return (
     <Link
       href={href}
@@ -286,7 +257,7 @@ export function Decoupe({
    Le modèle des cartes de services de la référence Editech. */
 
 export function CarteDomaine({ domaine, href, photo }: { domaine: string; href: string; photo: string }) {
-  const d = ICONES[domaine] ?? ICONES["Stratégie"]!;
+  const d = ICONES[domaine] ?? ICONES["Numérique"]!;
   return (
     <Link
       href={href}

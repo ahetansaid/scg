@@ -11,7 +11,7 @@ import { envoyerMessage } from "./actions";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: `Écrire à Strategic Consulting Group – ${CABINET.adresse}, ${CABINET.ville}.`,
+  description: `Écrire à Strategic Consulting Group, ${CABINET.ville}.`,
 };
 
 const ERREURS: Record<string, string> = {
@@ -80,18 +80,6 @@ export default async function Contact(props: PageProps<"/contact">) {
           <div className="rounded-carte bg-pastel-ciel p-6">
             <p className="text-[0.78rem] font-semibold text-canard">Nous joindre directement</p>
             <address className="mt-3 flex flex-col gap-4 text-[0.95rem] not-italic">
-              <span>
-                <span className="block text-[0.78rem] font-semibold text-gris">Adresse</span>
-                <span className="font-semibold text-marine">
-                  {CABINET.adresse}, {CABINET.ville}
-                </span>
-              </span>
-              <span>
-                <span className="block text-[0.78rem] font-semibold text-gris">Téléphone</span>
-                <a href={`tel:${CABINET.telephoneLien}`} className="font-semibold text-marine no-underline">
-                  {CABINET.telephone}
-                </a>
-              </span>
               <span>
                 <span className="block text-[0.78rem] font-semibold text-gris">E-mail</span>
                 <a href={`mailto:${CABINET.email}`} className="font-semibold break-all text-marine no-underline">

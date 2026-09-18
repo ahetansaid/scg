@@ -54,7 +54,7 @@ export default async function Programmes(props: PageProps<"/programmes">) {
         photo={PHOTOS.formation}
         actif="/programmes"
         sur="Catalogue"
-        titre="Six domaines, trois formats"
+        titre="Trois domaines, trois formats"
         souligne="trois formats"
         sous="Masterclasses courtes, formations de quelques jours, certifications sur plusieurs semaines. Toutes animées par des praticiens en exercice."
       >

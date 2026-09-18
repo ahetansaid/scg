@@ -2,15 +2,13 @@ import Link from "next/link";
 
 import { Logo } from "./Logo";
 
-/* Les coordonnées viennent de l'en-tête officielle du cabinet. */
+/* Les coordonnées viennent de l'en-tête officielle du cabinet. Adresse,
+   téléphone et IFU sont retirés de l'affichage pour le moment, à la demande
+   du cabinet : seul l'e-mail reste. */
 export const CABINET = {
   nom: "Strategic Consulting Group",
-  adresse: "Lot 100, Tokplegbe",
   ville: "Cotonou, Bénin",
-  telephone: "+229 66 56 66 10",
-  telephoneLien: "+22966566610",
   email: "Pdandjinou@gmail.com",
-  ifu: "1200901241800",
 } as const;
 
 const COLONNES = [
@@ -26,11 +24,11 @@ const COLONNES = [
   {
     titre: "Le cabinet",
     liens: [
-      { href: "/le-cabinet", libelle: "Qui nous sommes" },
-      { href: "/mentorat", libelle: "Réseau de mentors" },
+      { href: "/le-cabinet", libelle: "À propos" },
+      { href: "/mentorat", libelle: "Mentorat" },
       { href: "/publications", libelle: "Publications" },
       { href: "/opportunites", libelle: "Opportunités" },
-      { href: "/contact", libelle: "Nous écrire" },
+      { href: "/contact", libelle: "Contact" },
     ],
   },
 ] as const;
@@ -65,17 +63,10 @@ export function PiedDePage() {
         <div>
           <p className="mb-4 text-[0.95rem] font-bold text-white">Nous joindre</p>
           <address className="flex flex-col gap-2.5 text-[0.9rem] not-italic">
-            <span>
-              {CABINET.adresse}
-              <br />
-              {CABINET.ville}
-            </span>
-            <a href={`tel:${CABINET.telephoneLien}`} className="no-underline hover:text-white">
-              {CABINET.telephone}
-            </a>
             <a href={`mailto:${CABINET.email}`} className="break-all no-underline hover:text-white">
               {CABINET.email}
             </a>
+            <span>{CABINET.ville}</span>
           </address>
         </div>
       </div>
@@ -83,7 +74,7 @@ export function PiedDePage() {
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-[1180px] flex-wrap justify-between gap-3 px-4 py-5 text-[0.8rem] text-white/60 sm:px-6">
           <span>
-            © {new Date().getFullYear()} {CABINET.nom} · IFU {CABINET.ifu}
+            © {new Date().getFullYear()} {CABINET.nom}
           </span>
           <span>Cotonou, Bénin</span>
         </div>

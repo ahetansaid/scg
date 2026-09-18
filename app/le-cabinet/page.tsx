@@ -85,9 +85,9 @@ export default function LeCabinet() {
                 Des praticiens, <Souligne>pas des conférenciers</Souligne>
               </h2>
               <p className="mt-4 max-w-[54ch] text-gris">
-                Nos intervenants exercent. Un directeur financier en poste, un ancien directeur général d&apos;agence
-                publique, une contrôleuse de gestion dans l&apos;industrie. Ils enseignent ce qu&apos;ils font, sur
-                des cas qu&apos;ils ont eu à traiter.
+                Nos intervenants exercent. Un fondateur qui a levé des fonds, une responsable de la transformation
+                numérique d&apos;un groupe, un acteur de la gouvernance de l&apos;internet dans la sous-région. Ils
+                enseignent ce qu&apos;ils font, sur des cas qu&apos;ils ont eu à traiter.
               </p>
               <p className="mt-3 max-w-[54ch] text-gris">
                 Les groupes sont volontairement petits. Une masterclass ne dépasse pas vingt-cinq participants, une
@@ -107,25 +107,19 @@ export default function LeCabinet() {
         </section>
 
         <section className="mx-auto max-w-[1180px] px-4 py-14 sm:px-6">
-          <Reveler className="grid gap-5 rounded-grand bg-marine p-8 text-white md:grid-cols-3 md:p-12">
+          <Reveler className="grid items-center gap-6 rounded-grand bg-marine p-8 text-white md:grid-cols-[1.4fr_auto] md:p-12">
             <div>
-              <p className="text-[0.78rem] font-semibold text-soleil">Adresse</p>
-              <p className="mt-1 font-semibold">
-                {CABINET.adresse}
-                <br />
-                {CABINET.ville}
-              </p>
-            </div>
-            <div>
-              <p className="text-[0.78rem] font-semibold text-soleil">Téléphone</p>
-              <a href={`tel:${CABINET.telephoneLien}`} className="mt-1 block font-semibold no-underline">
-                {CABINET.telephone}
+              <p className="text-[0.78rem] font-semibold text-soleil">{CABINET.ville}</p>
+              <h2 className="mt-2 text-[clamp(1.4rem,2.8vw,2rem)] leading-tight font-extrabold tracking-[-0.02em]">
+                Une question, un projet de session ?
+              </h2>
+              <a href={`mailto:${CABINET.email}`} className="mt-2 inline-block break-all text-white/80 no-underline hover:text-white">
+                {CABINET.email}
               </a>
             </div>
-            <div>
-              <p className="text-[0.78rem] font-semibold text-soleil">IFU</p>
-              <p className="t-chiffres mt-1 font-semibold">{CABINET.ifu}</p>
-            </div>
+            <BoutonLien href="/contact" variante="clair" taille="lg">
+              Nous écrire
+            </BoutonLien>
           </Reveler>
         </section>
       </main>

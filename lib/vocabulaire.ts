@@ -4,14 +4,7 @@
    ils appartiennent au code, pas au contenu.
    ============================================================================ */
 
-export const DOMAINES = [
-  "Finance",
-  "Stratégie",
-  "Secteur public",
-  "Digital",
-  "Ressources humaines",
-  "Entrepreneuriat",
-] as const;
+export const DOMAINES = ["Entrepreneuriat", "Numérique", "Gouvernance de l'internet"] as const;
 
 export type Nature = "masterclass" | "formation" | "certification";
 export type Format = "presentiel" | "hybride" | "en_ligne";

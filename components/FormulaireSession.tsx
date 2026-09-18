@@ -97,7 +97,7 @@ export function FormulaireSession({
           label="Lieu"
           maxLength={200}
           defaultValue={valeurs.lieu ?? ""}
-          placeholder="Siège SCG, Lot 100 Tokplegbe"
+          placeholder="Siège SCG, Cotonou"
         />
         <Champ
           id="ville"

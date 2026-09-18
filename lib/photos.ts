@@ -42,13 +42,10 @@ export const VIDEOS = {
 
 /* Vignette par domaine, quand un programme n'a pas encore sa propre image. */
 export const PHOTO_DOMAINE: Record<string, string> = {
-  Finance: P(5717310),
-  Stratégie: P(9301745),
-  "Secteur public": P(30688592),
-  Digital: P(9301502),
-  "Ressources humaines": P(7446593),
   Entrepreneuriat: P(30690402),
-};
+  Numérique: P(9301502),
+  "Gouvernance de l'internet": P(30688592),
+}
 
 /* Portraits de remplacement pour les mentors sans photo. Tirés à tour de
    rôle, de façon stable, pour qu'un même mentor garde le même visage. */

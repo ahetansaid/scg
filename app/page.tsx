@@ -255,7 +255,7 @@ export default async function Accueil() {
       <section className="mx-auto max-w-[1180px] px-4 py-16 sm:px-6 md:py-24">
         <TitreSection
           sur="Nos domaines"
-          titre="Six domaines, un même niveau d'exigence"
+          titre="Trois domaines, un même niveau d'exigence"
           souligne="d'exigence"
           action={
             <BoutonLien href="/programmes" variante="contour" taille="sm">
@@ -263,7 +263,7 @@ export default async function Accueil() {
             </BoutonLien>
           }
         />
-        <Cascade className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-3">
+        <Cascade className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
           {DOMAINES.map((d) => (
             <Element key={d} className="w-[78%] shrink-0 snap-start sm:w-auto">
               <CarteDomaine domaine={d} href={`/programmes?domaine=${encodeURIComponent(d)}`} photo={PHOTO_DOMAINE[d] ?? PHOTOS.formation} />
@@ -285,9 +285,9 @@ export default async function Accueil() {
               Des praticiens, <Souligne>pas des conférenciers</Souligne>
             </h2>
             <p className="mt-4 max-w-[54ch] text-gris">
-              Nos intervenants exercent : directeur financier en poste, ancien directeur général d&apos;agence
-              publique, contrôleuse de gestion dans l&apos;industrie. Ils enseignent ce qu&apos;ils font, sur des cas
-              qu&apos;ils ont eu à traiter, dans des groupes volontairement petits.
+              Nos intervenants exercent : fondateur qui a levé des fonds, responsable de la transformation
+              numérique d&apos;un groupe, acteur de la gouvernance de l&apos;internet dans la sous-région. Ils
+              enseignent ce qu&apos;ils font, sur des cas qu&apos;ils ont eu à traiter, dans des groupes volontairement petits.
             </p>
             <div className="mt-7 grid gap-4 sm:grid-cols-2">
               {REPERES.map((r) => (

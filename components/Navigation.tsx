@@ -1,15 +1,13 @@
 import Link from "next/link";
 
 import { Logo } from "./Logo";
-import { CABINET } from "./PiedDePage";
 import { BoutonLien } from "./ui/Bouton";
 
 const LIENS = [
-  { href: "/programmes", libelle: "Programmes" },
+  { href: "/le-cabinet", libelle: "À propos" },
   { href: "/mentorat", libelle: "Mentorat" },
-  { href: "/publications", libelle: "Publications" },
+  { href: "/programmes", libelle: "Masterclass" },
   { href: "/opportunites", libelle: "Opportunités" },
-  { href: "/le-cabinet", libelle: "Le cabinet" },
   { href: "/contact", libelle: "Contact" },
 ] as const;
 
@@ -52,19 +50,6 @@ export function Navigation({ actif }: { actif?: string }) {
             </li>
           ))}
         </ul>
-
-        {/* Le téléphone du cabinet, comme dans la référence : visible sur grand écran. */}
-        <a href={`tel:${CABINET.telephoneLien}`} className="hidden items-center gap-3 whitespace-nowrap no-underline 2xl:flex">
-          <span className="flex size-10 items-center justify-center rounded-full bg-pastel-canard text-canard-fonce">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" aria-hidden="true">
-              <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z" strokeLinejoin="round" />
-            </svg>
-          </span>
-          <span className="leading-tight">
-            <span className="block text-[0.72rem] text-gris">Une question ?</span>
-            <span className="t-chiffres block text-[0.9rem] font-bold text-marine">{CABINET.telephone}</span>
-          </span>
-        </a>
 
         <div className="ml-auto flex items-center gap-2 lg:ml-0">
           {/* Sous 640 px, « Mon espace » suffit : il renvoie vers la connexion. */}
