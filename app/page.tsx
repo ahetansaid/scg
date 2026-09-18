@@ -57,19 +57,11 @@ export default async function Accueil() {
 
   const prochaine = sessions.find((s) => s.etat === "ouverte" || s.etat === "dernieres") ?? null;
 
-  const annonce = prochaine
-    ? {
-        texte: `Prochaine session : ${prochaine.programmeTitre}, le ${formatLong.format(prochaine.debut)}.`,
-        accent: prochaine.restantes > 0 ? `${prochaine.restantes} ${pluriel(prochaine.restantes, "place")}` : undefined,
-        href: `/programmes/${prochaine.programmeSlug}`,
-      }
-    : { texte: "Masterclasses, formations certifiantes et mentorat pour ceux qui décident." };
-
   const visages = mentors.slice(0, 4);
 
   return (
     <>
-      <Navigation annonce={annonce} />
+      <Navigation />
 
       {/* ================================================================ HERO
           Un cadre arrondi qui remplit l'écran, une séquence vidéo derrière un

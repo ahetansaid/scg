@@ -12,49 +12,28 @@ const LIENS = [
   { href: "/contact", libelle: "Contact" },
 ] as const;
 
-/* Navigation claire, comme la référence : bandeau d'annonce marine, puis
-   barre blanche avec logo, liens et actions. Sous 1024 px les liens passent
-   sur une ligne défilante en dessous, sans JavaScript.
+/* Navigation claire : une barre translucide collée en haut, avec logo, liens
+   et actions, alignée sur les cadres des pages. Sous 1024 px les liens
+   passent sur une ligne défilante en dessous, sans JavaScript. La prochaine
+   session s'annonce dans le hero, pas dans un ruban.
 
    Elle ne lit pas le cookie de session, exprès : les pages publiques sont
    générées statiquement et mises en cache, et une lecture de cookie les
    rendrait dynamiques. « Mon espace » redirige vers la connexion si besoin,
    « Connexion » redirige vers l'espace si l'on est déjà connecté. */
-export function Navigation({
-  actif,
-  annonce,
-}: {
-  actif?: string;
-  annonce?: { texte: string; href?: string; accent?: string };
-}) {
+export function Navigation({ actif }: { actif?: string }) {
   return (
     <header className="relative z-30">
-      {annonce && (
-        <div className="bg-marine text-center text-[0.8rem] text-white">
-          <div className="mx-auto max-w-[1180px] px-4 py-2">
-            {annonce.href ? (
-              <Link href={annonce.href} className="no-underline hover:underline">
-                {annonce.texte}
-                {annonce.accent && <span className="ml-1 font-semibold text-soleil">{annonce.accent}</span>}
-              </Link>
-            ) : (
-              <>
-                {annonce.texte}
-                {annonce.accent && <span className="ml-1 font-semibold text-soleil">{annonce.accent}</span>}
-              </>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* La barre reste collée en haut, translucide : le contenu passe dessous. */}
-      <div className="sticky top-0 z-30 border-b border-ligne/70 bg-white/85 backdrop-blur-md supports-[backdrop-filter]:bg-white/75">
+      {/* La barre reste collée en haut, translucide : le contenu passe dessous.
+          Sa largeur est celle des cadres (1400 px), pour que le logo tombe
+          au-dessus du bord gauche du hero. */}
+      <div className="sticky top-0 z-30 bg-white/85 backdrop-blur-md supports-[backdrop-filter]:bg-white/75">
       <nav
         aria-label="Navigation principale"
-        className="mx-auto flex max-w-[1180px] items-center gap-3 px-4 py-3 sm:gap-6 sm:px-6"
+        className="mx-auto flex max-w-[1400px] items-center gap-3 px-5 py-3 sm:gap-6 sm:px-8"
       >
         <Link href="/" className="shrink-0 no-underline">
-          <Logo hauteur={34} />
+          <Logo hauteur={46} />
         </Link>
 
         <ul className="hidden flex-1 list-none items-center justify-center gap-7 pl-0 text-[0.9rem] font-semibold lg:flex">
@@ -74,9 +53,12 @@ export function Navigation({
         </ul>
 
         <div className="ml-auto flex items-center gap-2 lg:ml-0">
-          <BoutonLien href="/connexion" variante="discret" taille="sm">
-            Connexion
-          </BoutonLien>
+          {/* Sous 640 px, « Mon espace » suffit : il renvoie vers la connexion. */}
+          <span className="hidden sm:block">
+            <BoutonLien href="/connexion" variante="discret" taille="sm">
+              Connexion
+            </BoutonLien>
+          </span>
           <BoutonLien href="/espace" variante="canard" taille="sm">
             Mon espace
           </BoutonLien>
@@ -84,7 +66,7 @@ export function Navigation({
       </nav>
       </div>
 
-      <ul className="mx-auto flex max-w-[1180px] list-none gap-2 overflow-x-auto bg-white px-4 py-2.5 pl-4 text-[0.82rem] font-semibold lg:hidden [scrollbar-width:none]">
+      <ul className="mx-auto flex max-w-[1400px] list-none gap-2 overflow-x-auto bg-white px-5 py-2 text-[0.82rem] font-semibold lg:hidden [scrollbar-width:none]">
         {LIENS.map((l) => (
           <li key={l.href} className="shrink-0">
             <Link

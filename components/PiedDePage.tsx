@@ -40,7 +40,7 @@ export function PiedDePage() {
     <footer className="mt-10 bg-marine text-white/80">
       <div className="mx-auto grid max-w-[1180px] gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <Logo hauteur={36} clair />
+          <Logo hauteur={56} clair />
           <p className="mt-5 max-w-[34ch] text-[0.9rem] leading-relaxed">
             Conseil, formation et mentorat pour les dirigeants, cadres publics et entrepreneurs
             de la sous-région.

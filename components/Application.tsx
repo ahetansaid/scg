@@ -74,7 +74,7 @@ export function Application({
     <div className="grid min-h-screen bg-brume md:grid-cols-[236px_1fr]">
       <aside className="flex flex-col gap-1 border-r border-ligne bg-white p-4 max-md:flex-row max-md:flex-wrap max-md:items-center max-md:gap-2">
         <Link href="/" className="flex items-center gap-2 px-2 pb-4 no-underline max-md:pb-0">
-          <Logo hauteur={30} />
+          <Logo hauteur={40} />
           {zone === "admin" && (
             <span className="rounded-full bg-pastel-soleil px-2 py-0.5 text-[0.66rem] font-bold text-[#8a5f14]">Admin</span>
           )}
