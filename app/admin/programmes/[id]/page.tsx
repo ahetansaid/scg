@@ -59,7 +59,7 @@ export default async function ModifierProgramme(props: PageProps<"/admin/program
           </>
         }
         actions={
-          <BoutonLien href="/admin/programmes" variante="fantomeClair" taille="sm">
+          <BoutonLien href="/admin/programmes" variante="contourMarine" taille="sm">
             Retour à la liste
           </BoutonLien>
         }
@@ -93,6 +93,7 @@ export default async function ModifierProgramme(props: PageProps<"/admin/program
             dureeLibelle: p.dureeLibelle,
             objectifs: p.objectifs,
             prerequis: p.prerequis,
+            imageUrl: p.imageUrl,
             statut: p.statut,
           }}
         />
@@ -104,13 +105,13 @@ export default async function ModifierProgramme(props: PageProps<"/admin/program
         ) : (
           <div className="mb-5 flex flex-col gap-4">
             {modules.map((m) => (
-              <div key={m.id} className="rounded-carte border border-ligne-douce p-4">
+              <div key={m.id} className="rounded-carte border border-ligne p-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-3">
                   <h3 className="text-[0.95rem] font-bold tracking-[-0.02em]">{m.titre}</h3>
                   <form action={supprimerModule}>
                     <input type="hidden" name="id" value={m.id} />
                     <input type="hidden" name="programme" value={p.id} />
-                    <Bouton type="submit" variante="fantomeClair" taille="sm">
+                    <Bouton type="submit" variante="contourMarine" taille="sm">
                       Supprimer le module
                     </Bouton>
                   </form>
@@ -120,11 +121,11 @@ export default async function ModifierProgramme(props: PageProps<"/admin/program
                   <ol className="mt-3 flex list-none flex-col gap-1.5 pl-0 text-[0.88rem]">
                     {m.seances.map((s, i) => (
                       <li key={s.id} className="grid grid-cols-[26px_1fr_auto] gap-3">
-                        <span className="t-balise text-[0.58rem] text-laiton-fonce">
+                        <span className="t-etiquette text-[0.58rem] text-canard">
                           {String(m.debut + i + 1).padStart(2, "0")}
                         </span>
                         <span>{s.titre}</span>
-                        <span className="t-balise text-[0.56rem] text-gris">
+                        <span className="t-etiquette text-[0.56rem] text-gris">
                           {s.dureeMinutes} min
                         </span>
                       </li>
@@ -134,7 +135,7 @@ export default async function ModifierProgramme(props: PageProps<"/admin/program
 
                 <form
                   action={ajouterSeance}
-                  className="mt-3 grid items-end gap-2 border-t border-ligne-douce pt-3 sm:grid-cols-[1fr_110px_auto]"
+                  className="mt-3 grid items-end gap-2 border-t border-ligne pt-3 sm:grid-cols-[1fr_110px_auto]"
                 >
                   <input type="hidden" name="module" value={m.id} />
                   <input type="hidden" name="programme" value={p.id} />
@@ -159,7 +160,7 @@ export default async function ModifierProgramme(props: PageProps<"/admin/program
 
         <form
           action={ajouterModule}
-          className="grid items-end gap-3 border-t border-ligne-douce pt-4 sm:grid-cols-[1fr_1fr_auto]"
+          className="grid items-end gap-3 border-t border-ligne pt-4 sm:grid-cols-[1fr_1fr_auto]"
         >
           <input type="hidden" name="programme" value={p.id} />
           <Champ id="module-titre" name="titre" label="Nouveau module" maxLength={200} required />
@@ -214,7 +215,7 @@ export default async function ModifierProgramme(props: PageProps<"/admin/program
               engagements pris avec des gens.
             </p>
             <input type="hidden" name="id" value={p.id} />
-            <Bouton type="submit" variante="fantomeClair" taille="sm">
+            <Bouton type="submit" variante="contourMarine" taille="sm">
               Supprimer
             </Bouton>
           </form>

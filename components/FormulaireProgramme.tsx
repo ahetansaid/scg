@@ -14,6 +14,7 @@ type Valeurs = {
   dureeLibelle?: string;
   objectifs?: string[];
   prerequis?: string[];
+  imageUrl?: string | null;
   statut?: string;
 };
 
@@ -91,6 +92,16 @@ export function FormulaireProgramme({
         maxLength={400}
         defaultValue={valeurs.accroche ?? ""}
         aide="Une phrase. Elle apparaît dans le catalogue et sur l'accueil."
+      />
+
+      <Champ
+        id="imageUrl"
+        name="imageUrl"
+        type="url"
+        label="Vignette (adresse de l'image)"
+        maxLength={500}
+        defaultValue={valeurs.imageUrl ?? ""}
+        aide="Facultatif. Sans vignette, la photo du domaine est utilisée."
       />
 
       <ChampTexte

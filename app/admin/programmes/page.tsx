@@ -90,7 +90,7 @@ export default async function AdminProgrammes(props: PageProps<"/admin/programme
                   {["Titre", "Nature", "Domaine", "Sessions", "Statut", ""].map((t) => (
                     <th
                       key={t}
-                      className="t-balise border-b border-ligne px-3 pb-2.5 text-left text-[0.56rem] font-medium whitespace-nowrap text-gris"
+                      className="t-etiquette border-b border-ligne px-3 pb-2.5 text-left text-[0.56rem] font-medium whitespace-nowrap text-gris"
                     >
                       {t}
                     </th>
@@ -100,7 +100,7 @@ export default async function AdminProgrammes(props: PageProps<"/admin/programme
               <tbody>
                 {liste.map((p) => (
                   <tr key={p.id}>
-                    <td className="border-b border-ligne-douce px-3 py-2.5">
+                    <td className="border-b border-ligne px-3 py-2.5">
                       <Link
                         href={`/admin/programmes/${p.id}`}
                         className="font-semibold text-encre no-underline hover:text-marine"
@@ -109,17 +109,17 @@ export default async function AdminProgrammes(props: PageProps<"/admin/programme
                       </Link>
                       <span className="block font-mono text-[0.72rem] text-gris">{p.slug}</span>
                     </td>
-                    <td className="border-b border-ligne-douce px-3 py-2.5">
+                    <td className="border-b border-ligne px-3 py-2.5">
                       {LIBELLE_NATURE[p.nature as Nature]}
                     </td>
-                    <td className="border-b border-ligne-douce px-3 py-2.5">{p.domaine}</td>
-                    <td className="t-chiffres border-b border-ligne-douce px-3 py-2.5 text-right font-semibold">
+                    <td className="border-b border-ligne px-3 py-2.5">{p.domaine}</td>
+                    <td className="t-chiffres border-b border-ligne px-3 py-2.5 text-right font-semibold">
                       {Number(p.sessions)}
                     </td>
-                    <td className="border-b border-ligne-douce px-3 py-2.5">
+                    <td className="border-b border-ligne px-3 py-2.5">
                       <Etiquette etat={STATUT[p.statut].etat}>{STATUT[p.statut].texte}</Etiquette>
                     </td>
-                    <td className="border-b border-ligne-douce px-3 py-2.5 text-right">
+                    <td className="border-b border-ligne px-3 py-2.5 text-right">
                       <Link
                         href={`/admin/programmes/${p.id}`}
                         className="text-[0.8rem] font-semibold text-marine"

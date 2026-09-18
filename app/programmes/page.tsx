@@ -1,41 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { LigneProgramme } from "@/components/CarteProgramme";
-import { Navigation } from "@/components/Navigation";
+import { EnTete, Filtre } from "@/components/EnTete";
 import { PiedDePage } from "@/components/PiedDePage";
+import { CarteProgramme } from "@/components/Vitrine";
 import { listerProgrammes } from "@/lib/catalogue";
-import { DOMAINES, FORMATS, LIBELLE_FORMAT, LIBELLE_NATURE, NATURES } from "@/lib/vocabulaire";
+import { DOMAINES, FORMATS, LIBELLE_FORMAT, LIBELLE_NATURE, NATURES, pluriel } from "@/lib/vocabulaire";
 
 export const metadata: Metadata = {
   title: "Programmes",
   description:
     "Masterclasses, formations et certifications SCG : finance, stratégie, secteur public, digital, ressources humaines, entrepreneuriat.",
 };
-
-function Filtre({
-  href,
-  actif,
-  children,
-}: {
-  href: string;
-  actif: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      aria-current={actif ? "true" : undefined}
-      className={`inline-block rounded-full border px-[13px] py-1.5 text-[0.79rem] font-semibold no-underline transition-colors ${
-        actif
-          ? "border-laiton bg-laiton text-[#1a1204]"
-          : "border-white/22 bg-white/7 text-[#dce7f1] hover:border-laiton/60"
-      }`}
-    >
-      {children}
-    </Link>
-  );
-}
 
 export default async function Programmes(props: PageProps<"/programmes">) {
   const params = await props.searchParams;
@@ -51,9 +27,8 @@ export default async function Programmes(props: PageProps<"/programmes">) {
 
   const programmes = await listerProgrammes({ domaine, nature, format, ouvertes });
 
-  /* Les filtres vivent dans l'URL, pas dans un état de composant : une
-     sélection se partage, se met en favori et s'indexe. Rappuyer sur un
-     filtre actif le retire. */
+  /* Les filtres vivent dans l'URL : une sélection se partage et s'indexe.
+     Rappuyer sur un filtre actif le retire. */
   const lien = (cle: string, valeur: string) => {
     const actuel: Record<string, string | undefined> = {
       domaine,
@@ -73,93 +48,85 @@ export default async function Programmes(props: PageProps<"/programmes">) {
 
   return (
     <>
-      <div
-        className="pb-7"
-        style={{
-          background:
-            "radial-gradient(66% 60% at 88% -10%, rgba(62,143,193,.3) 0%, rgba(62,143,193,0) 66%)," +
-            "linear-gradient(178deg,#04101f 0%,#0a2646 70%,#0b2e5b 100%)",
-        }}
+      <EnTete
+        actif="/programmes"
+        sur="Catalogue"
+        titre="Six domaines, trois formats"
+        souligne="trois formats"
+        sous="Masterclasses courtes, formations de quelques jours, certifications sur plusieurs semaines. Toutes animées par des praticiens en exercice."
       >
-        <Navigation actif="/programmes" />
-
-        <div className="mx-auto max-w-[1010px] px-4 pt-8 sm:px-8">
-          <p className="t-balise text-laiton">Catalogue</p>
-          <h1 className="t-h2 mt-1.5 text-white">
-            Six domaines, <em className="t-italique text-laiton">trois formats</em>
-          </h1>
-
-          <div className="mt-5 flex flex-wrap gap-2">
-            {DOMAINES.map((d) => (
-              <Filtre key={d} href={lien("domaine", d)} actif={domaine === d}>
-                {d}
-              </Filtre>
-            ))}
-          </div>
-          <div className="mt-2.5 flex flex-wrap gap-2">
-            {NATURES.map((n) => (
-              <Filtre key={n} href={lien("nature", n)} actif={nature === n}>
-                {LIBELLE_NATURE[n]}
-              </Filtre>
-            ))}
-            {FORMATS.map((f) => (
-              <Filtre key={f} href={lien("format", f)} actif={format === f}>
-                {LIBELLE_FORMAT[f]}
-              </Filtre>
-            ))}
-            <Filtre href={lien("statut", "ouvertes")} actif={ouvertes}>
-              Inscriptions ouvertes
+        <div className="flex flex-wrap gap-2">
+          {DOMAINES.map((d) => (
+            <Filtre key={d} href={lien("domaine", d)} actif={domaine === d}>
+              {d}
             </Filtre>
-          </div>
+          ))}
         </div>
-      </div>
+        <div className="mt-2.5 flex flex-wrap gap-2">
+          {NATURES.map((n) => (
+            <Filtre key={n} href={lien("nature", n)} actif={nature === n}>
+              {LIBELLE_NATURE[n]}
+            </Filtre>
+          ))}
+          {FORMATS.map((f) => (
+            <Filtre key={f} href={lien("format", f)} actif={format === f}>
+              {LIBELLE_FORMAT[f]}
+            </Filtre>
+          ))}
+          <Filtre href={lien("statut", "ouvertes")} actif={ouvertes}>
+            Inscriptions ouvertes
+          </Filtre>
+        </div>
+      </EnTete>
 
-      <main className="bg-papier">
-        <div className="mx-auto max-w-[1010px] px-4 py-10 sm:px-8 md:py-14">
-          <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
-            <p className="t-balise m-0 text-gris">
-              {programmes.length} résultat{programmes.length > 1 ? "s" : ""} · classés par date
-              d&apos;ouverture
+      <main className="mx-auto max-w-[1180px] px-4 py-10 sm:px-6 md:py-14">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+          <p className="text-[0.9rem] text-gris">
+            <strong className="text-marine">{programmes.length}</strong>{" "}
+            {pluriel(programmes.length, "programme")}
+            {filtreActif ? " pour ces filtres" : ""}
+          </p>
+          {filtreActif && (
+            <Link href="/programmes" className="text-[0.88rem] font-semibold text-canard">
+              Tout afficher
+            </Link>
+          )}
+        </div>
+
+        {programmes.length === 0 ? (
+          <div className="rounded-carte border border-ligne bg-brume p-8 text-center">
+            <p className="t-h3">
+              {filtreActif ? "Rien pour ces filtres" : "Aucun programme publié pour le moment"}
             </p>
-            {filtreActif && (
-              <Link href="/programmes" className="text-[0.82rem] font-semibold text-marine">
-                Tout afficher
-              </Link>
-            )}
-          </div>
-
-          {programmes.length === 0 ? (
-            <p className="rounded-carte border border-ligne bg-white p-6 text-gris">
+            <p className="mx-auto mt-2 max-w-[48ch] text-gris">
               {filtreActif ? (
                 <>
-                  Aucun programme ne correspond à ces filtres.{" "}
-                  <Link href="/programmes" className="font-semibold text-marine">
-                    Retirez-les
+                  <Link href="/programmes" className="font-semibold text-canard">
+                    Retirez les filtres
                   </Link>{" "}
                   ou{" "}
-                  <Link href="/contact" className="font-semibold text-marine">
+                  <Link href="/contact" className="font-semibold text-canard">
                     dites-nous ce que vous cherchez
                   </Link>{" "}
-                  – nous construisons aussi des sessions sur mesure.
+                  : nous construisons aussi des sessions sur mesure.
                 </>
               ) : (
                 <>
-                  Aucun programme n&apos;est publié pour le moment.{" "}
-                  <Link href="/contact" className="font-semibold text-marine">
+                  <Link href="/contact" className="font-semibold text-canard">
                     Écrivez-nous
                   </Link>{" "}
                   pour être prévenu de l&apos;ouverture des prochaines sessions.
                 </>
               )}
             </p>
-          ) : (
-            <ol className="m-0 list-none border-t border-[rgba(6,24,47,.16)] pl-0">
-              {programmes.map((p, i) => (
-                <LigneProgramme key={p.slug} programme={p} rang={i + 1} />
-              ))}
-            </ol>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {programmes.map((p) => (
+              <CarteProgramme key={p.slug} programme={p} />
+            ))}
+          </div>
+        )}
       </main>
 
       <PiedDePage />

@@ -83,7 +83,7 @@ export default async function FilMentorat(props: PageProps<"/espace/mentorat/[id
             <form action={repondreDemande}>
               <input type="hidden" name="demande" value={id} />
               <input type="hidden" name="decision" value="declinee" />
-              <Bouton type="submit" variante="fantomeClair" taille="sm">
+              <Bouton type="submit" variante="contourMarine" taille="sm">
                 Décliner
               </Bouton>
             </form>
@@ -99,7 +99,7 @@ export default async function FilMentorat(props: PageProps<"/espace/mentorat/[id
             </p>
             <input type="hidden" name="demande" value={id} />
             <input type="hidden" name="decision" value="close" />
-            <Bouton type="submit" variante="fantomeClair" taille="sm">
+            <Bouton type="submit" variante="contourMarine" taille="sm">
               Clore
             </Bouton>
           </form>
@@ -121,10 +121,10 @@ export default async function FilMentorat(props: PageProps<"/espace/mentorat/[id
                 <li
                   key={m.id}
                   className={`max-w-[52ch] rounded-carte px-4 py-3 ${
-                    moi ? "self-end bg-marine text-white" : "bg-papier"
+                    moi ? "self-end bg-marine text-white" : "bg-brume"
                   }`}
                 >
-                  <p className="t-balise m-0 text-[0.56rem] opacity-70">
+                  <p className="t-etiquette m-0 text-[0.56rem] opacity-70">
                     {moi
                       ? "Vous"
                       : [m.prenom, m.nom].filter(Boolean).join(" ") || m.email}{" "}
@@ -138,7 +138,7 @@ export default async function FilMentorat(props: PageProps<"/espace/mentorat/[id
         )}
 
         {echangePossible ? (
-          <form action={ecrireDansLeFil} className="mt-5 flex flex-col gap-3 border-t border-ligne-douce pt-4">
+          <form action={ecrireDansLeFil} className="mt-5 flex flex-col gap-3 border-t border-ligne pt-4">
             <input type="hidden" name="demande" value={id} />
             <ChampTexte id="corps" name="corps" label="Votre message" rows={4} required maxLength={4000} />
             <Bouton type="submit" variante="marine" taille="sm" className="self-start">
@@ -146,7 +146,7 @@ export default async function FilMentorat(props: PageProps<"/espace/mentorat/[id
             </Bouton>
           </form>
         ) : (
-          <p className="mt-5 border-t border-ligne-douce pt-4 text-[0.86rem] text-gris">
+          <p className="mt-5 border-t border-ligne pt-4 text-[0.86rem] text-gris">
             Ce fil est clos. Pour reprendre l&apos;échange,{" "}
             <Link href={`/mentorat/${demande.mentorSlug}`} className="font-semibold text-marine">
               adressez une nouvelle demande

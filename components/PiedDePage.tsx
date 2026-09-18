@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Sigle } from "./Navigation";
+import { Logo } from "./Logo";
 
 /* Les coordonnées viennent de l'en-tête officielle du cabinet. */
 export const CABINET = {
@@ -27,6 +27,9 @@ const COLONNES = [
     titre: "Le cabinet",
     liens: [
       { href: "/le-cabinet", libelle: "Qui nous sommes" },
+      { href: "/mentorat", libelle: "Réseau de mentors" },
+      { href: "/publications", libelle: "Publications" },
+      { href: "/opportunites", libelle: "Opportunités" },
       { href: "/contact", libelle: "Nous écrire" },
     ],
   },
@@ -34,12 +37,11 @@ const COLONNES = [
 
 export function PiedDePage() {
   return (
-    <footer className="bg-nuit text-[#b7cbdd]">
-      <div className="mx-auto grid max-w-[1010px] gap-10 px-4 py-12 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <footer className="mt-10 bg-marine text-white/80">
+      <div className="mx-auto grid max-w-[1180px] gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <Sigle className="text-white" />
-          <p className="t-balise mt-2 text-[0.6rem] text-[#8fb0cc]">{CABINET.nom}</p>
-          <p className="mt-4 max-w-[34ch] text-[0.86rem]">
+          <Logo hauteur={36} clair />
+          <p className="mt-5 max-w-[34ch] text-[0.9rem] leading-relaxed">
             Conseil, formation et mentorat pour les dirigeants, cadres publics et entrepreneurs
             de la sous-région.
           </p>
@@ -47,8 +49,8 @@ export function PiedDePage() {
 
         {COLONNES.map((col) => (
           <nav key={col.titre} aria-label={col.titre}>
-            <p className="t-balise mb-3 text-[0.6rem] text-[#5f7b96]">{col.titre}</p>
-            <ul className="flex list-none flex-col gap-2 pl-0 text-[0.86rem]">
+            <p className="mb-4 text-[0.95rem] font-bold text-white">{col.titre}</p>
+            <ul className="flex list-none flex-col gap-2.5 pl-0 text-[0.9rem]">
               {col.liens.map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="no-underline hover:text-white">
@@ -61,8 +63,8 @@ export function PiedDePage() {
         ))}
 
         <div>
-          <p className="t-balise mb-3 text-[0.6rem] text-[#5f7b96]">Nous joindre</p>
-          <address className="flex flex-col gap-2 text-[0.86rem] not-italic">
+          <p className="mb-4 text-[0.95rem] font-bold text-white">Nous joindre</p>
+          <address className="flex flex-col gap-2.5 text-[0.9rem] not-italic">
             <span>
               {CABINET.adresse}
               <br />
@@ -71,7 +73,7 @@ export function PiedDePage() {
             <a href={`tel:${CABINET.telephoneLien}`} className="no-underline hover:text-white">
               {CABINET.telephone}
             </a>
-            <a href={`mailto:${CABINET.email}`} className="no-underline hover:text-white">
+            <a href={`mailto:${CABINET.email}`} className="break-all no-underline hover:text-white">
               {CABINET.email}
             </a>
           </address>
@@ -79,13 +81,11 @@ export function PiedDePage() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-[1010px] flex-wrap justify-between gap-3 px-4 py-5 text-[0.78rem] text-[#8fb0cc] sm:px-8">
+        <div className="mx-auto flex max-w-[1180px] flex-wrap justify-between gap-3 px-4 py-5 text-[0.8rem] text-white/60 sm:px-6">
           <span>
             © {new Date().getFullYear()} {CABINET.nom} · IFU {CABINET.ifu}
           </span>
-          <a href={`mailto:${CABINET.email}`} className="no-underline hover:text-white">
-            {CABINET.email}
-          </a>
+          <span>Cotonou, Bénin</span>
         </div>
       </div>
     </footer>

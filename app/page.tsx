@@ -1,274 +1,243 @@
+import Image from "next/image";
 import Link from "next/link";
 
-import { CarteProgramme } from "@/components/CarteProgramme";
-import { Arc, type Pole } from "@/components/motifs/Arc";
 import { Cohorte } from "@/components/motifs/Cohorte";
-import { Ruban, type EntreeRuban } from "@/components/motifs/Ruban";
 import { Navigation } from "@/components/Navigation";
 import { PiedDePage } from "@/components/PiedDePage";
 import { BoutonLien } from "@/components/ui/Bouton";
-import { Etiquette } from "@/components/ui/Etiquette";
+import {
+  CarteMentor,
+  CarteProgramme,
+  Decoupe,
+  Pastilles,
+  PuceDomaine,
+  TitreSection,
+} from "@/components/Vitrine";
 import { listerProgrammes, sessionsDuTrimestre } from "@/lib/catalogue";
 import { listerMentors } from "@/lib/mentorat";
-import { montant, pluriel } from "@/lib/vocabulaire";
+import { PHOTOS } from "@/lib/photos";
+import { listerArticles } from "@/lib/publications";
+import { DOMAINES, formatLong, montant, pluriel } from "@/lib/vocabulaire";
 
-/* La page se reconstruit toutes les dix minutes : le catalogue bouge à
-   l'échelle de la semaine, pas de la seconde. */
 export const revalidate = 600;
 
-const POLES: Pole[] = [
-  { action: "Diagnostiquer", titre: "Publications" },
-  { action: "Apprendre", titre: "Masterclasses" },
-  { action: "Certifier", titre: "Formations" },
-  { action: "Accompagner", titre: "Mentorat" },
-];
-
-const MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
-
-/* Le ruban déplie douze semaines à partir d'aujourd'hui. Chaque session est
-   placée par sa semaine de début et de fin : c'est la durée réelle qui
-   dessine le bloc, pas une largeur choisie à la main. */
-function construireRuban(
-  sessions: Awaited<ReturnType<typeof sessionsDuTrimestre>>,
-  origine: Date,
-): { mois: [string, string, string]; entrees: EntreeRuban[] } {
-  const semaine = (d: Date) =>
-    Math.floor((d.getTime() - origine.getTime()) / (7 * 24 * 3600 * 1000)) + 1;
-
-  const mois = [0, 1, 2].map((n) => {
-    const d = new Date(origine);
-    d.setMonth(d.getMonth() + n);
-    return MOIS[d.getMonth()]!.replace(/^./, (c) => c.toUpperCase());
-  }) as [string, string, string];
-
-  /* Trois lignes d'empilement : on pose chaque session sur la première ligne
-     encore libre à cette date, pour éviter les chevauchements. */
-  const finLigne = [0, 0, 0];
-
-  const entrees = sessions.slice(0, 8).map((s): EntreeRuban => {
-    const debut = Math.min(12, Math.max(1, semaine(s.debut)));
-    const fin = Math.min(12, Math.max(debut, semaine(s.fin)));
-    const ligne = (finLigne.findIndex((f) => f < debut) + 1 || 1) as 1 | 2 | 3;
-    finLigne[ligne - 1] = fin;
-
-    return {
-      titre: s.programmeTitre,
-      detail: `${s.debutCourt}${s.restantes > 0 ? ` · ${s.restantes} ${pluriel(s.restantes, "place")}` : " · complet"}`,
-      semaineDebut: debut,
-      semaineFin: fin,
-      ligne,
-      ton: s.etat === "complete" || s.etat === "close" ? "aVenir" : s.etat === "dernieres" ? "dernieres" : "ouvert",
-      href: `/programmes/${s.programmeSlug}`,
-    };
-  });
-
-  return { mois, entrees };
-}
-
 export default async function Accueil() {
-  const origine = new Date();
-  const [programmes, sessions, mentors] = await Promise.all([
+  const [programmes, sessions, mentors, articles] = await Promise.all([
     listerProgrammes(),
-    sessionsDuTrimestre(origine),
+    sessionsDuTrimestre(new Date()),
     listerMentors(),
+    listerArticles(),
   ]);
 
-  const phare = programmes.find((p) => p.prochaine?.etat === "dernieres") ?? programmes[0] ?? null;
-  const autres = programmes.filter((p) => p.slug !== phare?.slug).slice(0, 3);
-  const s = phare?.prochaine ?? null;
-  const ruban = construireRuban(sessions, origine);
+  const prochaine = sessions.find((s) => s.etat === "ouverte" || s.etat === "dernieres") ?? null;
+
+  const annonce = prochaine
+    ? {
+        texte: `Prochaine session : ${prochaine.programmeTitre}, le ${formatLong.format(prochaine.debut)}.`,
+        accent: prochaine.restantes > 0 ? `${prochaine.restantes} ${pluriel(prochaine.restantes, "place")}` : undefined,
+        href: `/programmes/${prochaine.programmeSlug}`,
+      }
+    : { texte: "Masterclasses, formations certifiantes et mentorat pour ceux qui décident." };
 
   return (
     <>
-      {/* ------------------------------------------------------------- nuit */}
-      <section
-        className="relative overflow-hidden"
-        style={{
-          background:
-            "radial-gradient(80% 62% at 50% 118%, rgba(216,155,52,.46) 0%, rgba(216,155,52,0) 62%)," +
-            "radial-gradient(66% 52% at 86% -4%, rgba(62,143,193,.34) 0%, rgba(62,143,193,0) 66%)," +
-            "linear-gradient(178deg,#04101f 0%,#0a2646 58%,#0b2e5b 100%)",
-        }}
-      >
-        <Navigation />
+      <Navigation annonce={annonce} />
 
-        <div className="relative z-[3] mx-auto max-w-[1010px] px-4 pt-10 pb-6 sm:px-8 md:pt-16">
-          <p className="t-balise text-laiton">Cotonou · Conseil et formation de dirigeants</p>
-          <h1 className="t-display mt-3.5 max-w-[13ch] text-white">
-            Former ceux qui <em className="t-italique text-laiton">décident</em>
-          </h1>
-          <p className="mt-4 max-w-[44ch] text-[#b9cddf]">
-            Un cabinet fait passer une organisation d&apos;un point à un autre. Nos quatre pôles
-            jalonnent ce trajet.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-2.5">
-            <BoutonLien href="/programmes" variante="laiton">
-              Le trimestre en cours
-            </BoutonLien>
-            <BoutonLien href="/mentorat" variante="fantomeNuit">
-              Trouver un mentor
-            </BoutonLien>
+      {/* ================================================================ HERO */}
+      <section className="relative overflow-hidden bg-brume">
+        <Pastilles />
+        <div aria-hidden="true" className="trame absolute top-16 left-[-40px] h-40 w-40 opacity-60" />
+        <div aria-hidden="true" className="trame absolute right-[8%] bottom-10 h-28 w-28 opacity-50" />
+
+        <div className="mx-auto grid max-w-[1180px] items-center gap-10 px-4 pt-12 pb-20 sm:px-6 md:grid-cols-[1.05fr_1fr] md:pt-16 md:pb-28">
+          <div className="relative z-10">
+            <p className="t-sur mb-4 inline-flex items-center gap-2">
+              <span aria-hidden="true" className="inline-block size-2 rounded-full bg-soleil" />
+              Cotonou · Conseil et formation de dirigeants
+            </p>
+            <h1 className="t-hero">
+              Former ceux qui <span className="souligne">décident</span>
+            </h1>
+            <p className="mt-5 max-w-[46ch] text-[1.05rem] text-gris">
+              Masterclasses, formations certifiantes et mentorat, animés par des praticiens en
+              exercice. Pour les dirigeants, cadres publics et entrepreneurs de la sous-région.
+            </p>
+            <div className="mt-7 flex flex-wrap items-center gap-4">
+              <BoutonLien href="/programmes" variante="canard" taille="lg">
+                Voir les programmes
+              </BoutonLien>
+              <Link href="/mentorat" className="text-[0.95rem] font-semibold text-marine no-underline hover:text-canard">
+                Trouver un mentor →
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative mx-auto w-full max-w-[520px]">
+            <Decoupe src={PHOTOS.hero} alt="" forme="galet" className="aspect-[4/5] w-full" priority />
+
+            {/* Carte flottante : la prochaine session réelle, pas un chiffre
+                de vitrine. */}
+            <div className="absolute -bottom-6 -left-4 w-[min(300px,80%)] rounded-carte bg-white p-4 shadow-flottant sm:-left-10">
+              {prochaine ? (
+                <>
+                  <p className="text-[0.74rem] font-semibold text-canard">Prochaine session</p>
+                  <p className="mt-1 text-[0.95rem] leading-snug font-bold text-marine">
+                    {prochaine.programmeTitre}
+                  </p>
+                  <p className="mt-1 text-[0.8rem] text-gris">
+                    {formatLong.format(prochaine.debut)} · {montant(prochaine.prixFcfa)} FCFA
+                  </p>
+                  <div className="mt-3">
+                    <Cohorte capacite={prochaine.capacite} pris={prochaine.confirmees} compteur />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="text-[0.74rem] font-semibold text-canard">Le calendrier</p>
+                  <p className="mt-1 text-[0.95rem] leading-snug font-bold text-marine">
+                    Les prochaines sessions arrivent
+                  </p>
+                  <p className="mt-1 text-[0.8rem] text-gris">
+                    Laissez-nous vos coordonnées, nous vous prévenons à l&apos;ouverture.
+                  </p>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
-        <Arc poles={POLES} />
+        {/* Le grand arrondi blanc qui referme le hero, comme dans la référence. */}
+        <div aria-hidden="true" className="absolute inset-x-0 -bottom-px h-14 rounded-t-[100%_100%] bg-white md:h-20" />
       </section>
 
-      {/* ----------------------------------------------------------- papier */}
-      {ruban.entrees.length > 0 && (
-        <section className="bg-papier">
-          <div className="mx-auto max-w-[1010px] px-4 py-10 sm:px-8 md:py-14">
-            <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <p className="t-balise text-laiton-fonce">
-                  {ruban.mois[0]} → {ruban.mois[2]}
-                </p>
-                <h2 className="t-h2 mt-1.5">
-                  Le trimestre, <em className="t-italique text-laiton-fonce">déplié</em>
-                </h2>
-              </div>
-              <Link href="/programmes" className="text-[0.82rem] font-semibold text-marine">
-                Calendrier complet →
-              </Link>
-            </div>
+      {/* ============================================================ DOMAINES */}
+      <section className="mx-auto max-w-[1180px] px-4 py-14 sm:px-6 md:py-20">
+        <TitreSection titre="Nos domaines" souligne="domaines" centre />
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {DOMAINES.map((d) => (
+            <PuceDomaine key={d} domaine={d} href={`/programmes?domaine=${encodeURIComponent(d)}`} />
+          ))}
+        </div>
+      </section>
 
-            <Ruban mois={ruban.mois} entrees={ruban.entrees} />
-
-            <p className="t-balise mt-3 text-gris">
-              Plein = inscriptions ouvertes · Ochre = dernières places · Contour = complet ou clos
+      {/* ======================================================= DEUX VOIES */}
+      <section className="mx-auto max-w-[1180px] px-4 pb-14 sm:px-6 md:pb-20">
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="relative overflow-hidden rounded-grand bg-pastel-soleil p-8 md:p-10">
+            <div aria-hidden="true" className="trame absolute right-6 bottom-6 h-24 w-24 opacity-60" />
+            <p className="t-sur">Apprendre avec</p>
+            <h3 className="t-h2 mt-1">Des praticiens en exercice</h3>
+            <p className="mt-3 max-w-[34ch] text-gris">
+              Chaque séance produit un livrable que vous rapportez dans votre structure.
             </p>
+            <BoutonLien href="/programmes" variante="canard" className="mt-6">
+              Voir les programmes
+            </BoutonLien>
+            <span className="absolute -top-4 right-8 hidden size-24 overflow-hidden rounded-full ring-8 ring-white md:block">
+              <Image src={PHOTOS.atelier} alt="" fill sizes="96px" className="object-cover" />
+            </span>
           </div>
-        </section>
-      )}
 
-      {/* ----------------------------------------------------------- laiton */}
-      {phare && s && (
-        <section className="bg-laiton">
-          <div className="mx-auto max-w-[1010px] px-4 py-10 sm:px-8 md:py-14">
-            <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <p className="t-balise text-[#4a340c]">Le cycle du trimestre</p>
-                <h2 className="t-h2 mt-1.5 text-nuit">{phare.domaine}</h2>
-              </div>
-              <Link href="/programmes" className="text-[0.82rem] font-semibold text-nuit">
-                Tous les programmes →
-              </Link>
-            </div>
-
-            <div className="grid items-stretch gap-6 md:grid-cols-[1.15fr_0.85fr]">
-              <article className="relative flex flex-col overflow-hidden rounded-panneau bg-nuit p-6 text-[#dce7f1] sm:p-7">
-                <svg
-                  viewBox="0 0 200 80"
-                  fill="none"
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -right-[14%] -bottom-[52%] w-4/5 opacity-20"
-                >
-                  <path d="M5 76 C 50 8, 150 8, 195 76" stroke="#d89b34" strokeWidth="3" />
-                </svg>
-
-                {s.restantes > 0 && (
-                  <div className="relative">
-                    <Etiquette etat="bientot" fond="nuit">
-                      {s.restantes} {pluriel(s.restantes, "place")}
-                    </Etiquette>
-                  </div>
-                )}
-
-                <h3 className="t-h2 relative mt-3 text-white">{phare.titre}</h3>
-                <p className="relative mt-3 max-w-[38ch] text-[0.88rem] text-[#a8c0d6]">
-                  {phare.accroche}
-                </p>
-
-                {phare.objectifs.length > 0 && (
-                  <ol className="relative mt-5 flex list-none flex-col border-t border-white/14 pl-0">
-                    {phare.objectifs.slice(0, 4).map((o, i) => (
-                      <li
-                        key={o}
-                        className="grid grid-cols-[26px_1fr] gap-3 border-b border-white/8 py-2 text-[0.83rem]"
-                      >
-                        <span className="t-balise text-[0.63rem] tracking-[0.1em] text-laiton">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <span>{o}</span>
-                      </li>
-                    ))}
-                  </ol>
-                )}
-
-                <div className="relative mt-auto flex flex-wrap items-end justify-between gap-4 pt-5">
-                  <div>
-                    <p className="t-chiffres m-0 text-[1.5rem] font-extrabold tracking-[-0.035em] text-white">
-                      {montant(s.prixFcfa)}{" "}
-                      <span className="text-[0.68rem] font-medium tracking-normal text-[#9fb8ce]">
-                        FCFA
-                      </span>
-                    </p>
-                    <Cohorte
-                      capacite={s.capacite}
-                      pris={s.confirmees}
-                      fond="nuit"
-                      compteur
-                      className="mt-2.5"
-                    />
-                  </div>
-                  <BoutonLien href={`/programmes/${phare.slug}`} variante="laiton">
-                    Voir le programme
-                  </BoutonLien>
-                </div>
-              </article>
-
-              <div className="flex flex-col justify-center gap-3.5">
-                <p className="t-balise text-[#4a340c]">Ce que produit le cycle</p>
-                <blockquote className="t-italique m-0 text-[clamp(1.15rem,2.2vw,1.55rem)] leading-[1.25] text-nuit">
-                  {phare.description.split(". ")[0]}.
-                </blockquote>
-                <p className="t-balise text-[#4a340c]">
-                  {phare.dureeLibelle} · {s.lieu || s.ville}
-                </p>
-              </div>
-            </div>
+          <div className="relative overflow-hidden rounded-grand bg-pastel-ciel p-8 md:p-10">
+            <div aria-hidden="true" className="trame absolute right-6 bottom-6 h-24 w-24 opacity-60" />
+            <p className="t-sur">Être accompagné</p>
+            <h3 className="t-h2 mt-1">Par un mentor en poste</h3>
+            <p className="mt-3 max-w-[34ch] text-gris">
+              Quelques créneaux par mois, pour trancher une décision avec quelqu&apos;un qui l&apos;a déjà prise.
+            </p>
+            <BoutonLien href="/mentorat" variante="canard" className="mt-6">
+              Trouver un mentor
+            </BoutonLien>
+            <span className="absolute -top-4 right-8 hidden size-24 overflow-hidden rounded-full ring-8 ring-white md:block">
+              <Image src={PHOTOS.reunion} alt="" fill sizes="96px" className="object-cover" />
+            </span>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
-      {/* ------------------------------------------------------------- nuit */}
+      {/* ========================================================== PROGRAMMES */}
+      <section className="bg-brume">
+        <div className="mx-auto max-w-[1180px] px-4 py-14 sm:px-6 md:py-20">
+          <TitreSection
+            sur="Le calendrier"
+            titre="Programmes à venir"
+            souligne="à venir"
+            action={
+              <BoutonLien href="/programmes" variante="contour" taille="sm">
+                Tout le catalogue
+              </BoutonLien>
+            }
+          />
+
+          {programmes.length === 0 ? (
+            <div className="rounded-carte border border-ligne bg-white p-8 text-center">
+              <p className="t-h3">Le calendrier arrive</p>
+              <p className="mx-auto mt-2 max-w-[48ch] text-gris">
+                Aucun programme n&apos;est publié pour le moment.{" "}
+                <Link href="/contact" className="font-semibold text-canard">
+                  Écrivez-nous
+                </Link>{" "}
+                pour être prévenu de l&apos;ouverture des prochaines sessions.
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {programmes.slice(0, 8).map((p) => (
+                <CarteProgramme key={p.slug} programme={p} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ============================================================= MENTORS */}
       {mentors.length > 0 && (
-        <section className="bg-nuit">
-          <div className="mx-auto max-w-[1010px] px-4 py-10 sm:px-8 md:py-14">
-            <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <p className="t-balise text-laiton">Réseau</p>
-                <h2 className="t-h2 mt-1.5 text-white">
-                  Des praticiens <em className="t-italique text-laiton">en exercice</em>
-                </h2>
-              </div>
-              <Link href="/mentorat" className="text-[0.82rem] font-semibold text-azur">
-                Parcourir l&apos;annuaire →
-              </Link>
-            </div>
+        <section className="mx-auto max-w-[1180px] px-4 py-14 sm:px-6 md:py-20">
+          <TitreSection
+            sur="Le réseau"
+            titre="Des mentors en exercice"
+            souligne="en exercice"
+            action={
+              <BoutonLien href="/mentorat" variante="contour" taille="sm">
+                Tout l&apos;annuaire
+              </BoutonLien>
+            }
+          />
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {mentors.slice(0, 4).map((m) => (
+              <CarteMentor key={m.slug} mentor={m} />
+            ))}
+          </div>
+        </section>
+      )}
 
-            <div className="grid grid-cols-4 items-start gap-3.5 max-md:grid-cols-2">
-              {mentors.slice(0, 4).map((m, i) => (
+      {/* ========================================================= PUBLICATIONS */}
+      {articles.length > 0 && (
+        <section className="bg-brume">
+          <div className="mx-auto max-w-[1180px] px-4 py-14 sm:px-6 md:py-20">
+            <TitreSection
+              sur="Publications"
+              titre="Ce que le cabinet écrit"
+              souligne="écrit"
+              action={
+                <BoutonLien href="/publications" variante="contour" taille="sm">
+                  Toutes les publications
+                </BoutonLien>
+              }
+            />
+            <div className="grid gap-5 md:grid-cols-3">
+              {articles.slice(0, 3).map((a) => (
                 <Link
-                  key={m.slug}
-                  href={`/mentorat/${m.slug}`}
-                  className="flex flex-col gap-2 rounded-carte border border-white/13 bg-white/4 p-4 no-underline transition-transform duration-200 hover:-translate-y-1 hover:border-laiton/50 motion-reduce:hover:translate-y-0"
-                  style={{ marginTop: i === 0 || i === 3 ? "38px" : undefined }}
+                  key={a.slug}
+                  href={`/publications/${a.slug}`}
+                  className="flex h-full flex-col gap-2 rounded-carte border border-ligne bg-white p-6 no-underline shadow-carte transition-transform hover:-translate-y-1 motion-reduce:hover:translate-y-0"
                 >
-                  <span
-                    className="t-italique flex size-[50px] items-center justify-center rounded-[14px] text-[1.32rem] text-white"
-                    style={{ background: DEGRADES[i % DEGRADES.length] }}
-                    aria-hidden="true"
-                  >
-                    {m.initiales}
-                  </span>
-                  <span className="text-[0.94rem] font-bold tracking-[-0.02em] text-white">
-                    {m.nomComplet}
-                  </span>
-                  <span className="text-[0.77rem] text-[#9fb8ce]">{m.titre}</span>
-                  <span className="mt-auto flex items-center gap-1.5 border-t border-white/10 pt-2.5 text-[0.73rem] text-[#8fc7a9]">
-                    <span className="block size-1.5 shrink-0 rounded-full bg-vert-clair" />
-                    {m.creneauxLibres} {pluriel(m.creneauxLibres, "créneau", "créneaux")}
+                  <span className="text-[0.78rem] font-semibold text-canard">{a.categorie}</span>
+                  <span className="t-h3">{a.titre}</span>
+                  {a.chapo && <span className="line-clamp-3 text-[0.88rem] text-gris">{a.chapo}</span>}
+                  <span className="mt-auto pt-3 text-[0.8rem] text-gris">
+                    {a.minutesLecture > 0 ? `${a.minutesLecture} min de lecture` : ""}
+                    {a.publieAt ? ` · ${formatLong.format(a.publieAt)}` : ""}
                   </span>
                 </Link>
               ))}
@@ -277,57 +246,29 @@ export default async function Accueil() {
         </section>
       )}
 
-      {/* ----------------------------------------------------------- papier */}
-      {autres.length > 0 && (
-        <section className="bg-papier">
-          <div className="mx-auto max-w-[1010px] px-4 py-10 sm:px-8 md:py-14">
-            <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <p className="t-balise text-laiton-fonce">Aussi au programme</p>
-                <h2 className="t-h2 mt-1.5">
-                  D&apos;autres <em className="t-italique text-laiton-fonce">cycles</em>
-                </h2>
-              </div>
-              <Link href="/programmes" className="text-[0.82rem] font-semibold text-marine">
-                Le catalogue →
-              </Link>
+      {/* ============================================================== APPEL */}
+      <section className="mx-auto max-w-[1180px] px-4 py-14 sm:px-6 md:py-20">
+        <div className="relative overflow-hidden rounded-grand bg-marine px-8 py-12 text-white md:px-14 md:py-16">
+          <span aria-hidden="true" className="pastille size-40 bg-canard/30" style={{ top: -40, right: -30 }} />
+          <span aria-hidden="true" className="pastille size-24 bg-soleil/30" style={{ bottom: -30, left: "30%" }} />
+          <div className="relative grid items-center gap-8 md:grid-cols-[1.4fr_auto]">
+            <div>
+              <h2 className="text-[clamp(1.6rem,3.2vw,2.3rem)] leading-tight font-extrabold tracking-[-0.02em]">
+                Une session sur mesure pour vos équipes ?
+              </h2>
+              <p className="mt-3 max-w-[52ch] text-white/80">
+                Nous construisons aussi des cycles fermés, dans vos locaux ou à distance, sur les
+                sujets qui bloquent vraiment.
+              </p>
             </div>
-
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {autres.map((p) => (
-                <CarteProgramme key={p.slug} programme={p} />
-              ))}
-            </div>
+            <BoutonLien href="/contact" variante="clair" taille="lg">
+              Nous écrire
+            </BoutonLien>
           </div>
-        </section>
-      )}
-
-      {/* Catalogue vide : on le dit, plutôt que d'afficher une page creuse. */}
-      {programmes.length === 0 && (
-        <section className="bg-papier">
-          <div className="mx-auto max-w-[1010px] px-4 py-14 sm:px-8">
-            <h2 className="t-h2">
-              Le calendrier <em className="t-italique text-laiton-fonce">arrive</em>
-            </h2>
-            <p className="mt-3 max-w-[52ch] text-gris">
-              Aucun programme n&apos;est publié pour le moment.{" "}
-              <Link href="/contact" className="font-semibold text-marine">
-                Dites-nous ce que vous cherchez
-              </Link>{" "}
-              et nous vous préviendrons à l&apos;ouverture des prochaines sessions.
-            </p>
-          </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       <PiedDePage />
     </>
   );
 }
-
-const DEGRADES = [
-  "linear-gradient(135deg,#164a85,#3e8fc1)",
-  "linear-gradient(135deg,#8a5f14,#d89b34)",
-  "linear-gradient(135deg,#0b2e5b,#1f6b4a)",
-  "linear-gradient(135deg,#3a2350,#164a85)",
-];

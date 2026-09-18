@@ -97,6 +97,7 @@ export async function enregistrerProgramme(donnees: FormData) {
     accroche: texte(donnees.get("accroche"), 400),
     description: texte(donnees.get("description"), 6000),
     dureeLibelle: texte(donnees.get("dureeLibelle"), 80),
+    imageUrl: texte(donnees.get("imageUrl"), 500) || null,
     objectifs: lignes(donnees.get("objectifs")),
     prerequis: lignes(donnees.get("prerequis")),
     statut: texte(donnees.get("statut"), 20) as StatutPublication,

@@ -41,6 +41,7 @@ export type ProgrammeVue = {
   dureeLibelle: string;
   objectifs: string[];
   prerequis: string[];
+  imageUrl: string | null;
   sessions: SessionVue[];
   prochaine: SessionVue | null;
 };
@@ -147,6 +148,7 @@ async function assembler(lignes: (typeof programmes.$inferSelect)[]): Promise<Pr
       dureeLibelle: p.dureeLibelle,
       objectifs: p.objectifs,
       prerequis: p.prerequis,
+      imageUrl: p.imageUrl,
       sessions: vues,
       prochaine: vues.find((s) => s.etat === "ouverte" || s.etat === "dernieres") ?? vues[0] ?? null,
     };

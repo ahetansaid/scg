@@ -105,7 +105,7 @@ export default async function AdminSessions(props: PageProps<"/admin/sessions">)
               return (
                 <li
                   key={s.id}
-                  className="flex flex-wrap items-center justify-between gap-4 border-b border-ligne-douce pb-4 last:border-b-0 last:pb-0"
+                  className="flex flex-wrap items-center justify-between gap-4 border-b border-ligne pb-4 last:border-b-0 last:pb-0"
                 >
                   <div>
                     <Link
@@ -114,7 +114,7 @@ export default async function AdminSessions(props: PageProps<"/admin/sessions">)
                     >
                       {s.titre}
                     </Link>
-                    <span className="t-balise mt-0.5 block text-[0.56rem] text-gris">
+                    <span className="t-etiquette mt-0.5 block text-[0.56rem] text-gris">
                       {s.reference} · {formatLong.format(s.debut)} · {montant(s.prixFcfa)} FCFA ·{" "}
                       {s.statut}
                     </span>

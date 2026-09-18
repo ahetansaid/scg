@@ -150,6 +150,8 @@ export const programmes = pgTable(
     objectifs: tableauTexte(),
     prerequis: tableauTexte(),
     dureeLibelle: text("duree_libelle").notNull().default(""),
+    /* Vignette du programme. Absente, la vitrine prend la photo du domaine. */
+    imageUrl: text("image_url"),
     statut: statutPublicationEnum().notNull().default("brouillon"),
     creeAt: timestamp("cree_at", { withTimezone: true }).notNull().defaultNow(),
   },

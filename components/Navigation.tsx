@@ -1,59 +1,68 @@
 import Link from "next/link";
 
+import { Logo } from "./Logo";
 import { BoutonLien } from "./ui/Bouton";
 
-/* On ne navigue que vers ce qui existe : Mentorat (étape 5) et Publications
-   (étape 6) entreront ici quand leurs pages seront livrées. Un lien mort dans
-   une navigation coûte plus cher qu'une entrée manquante. */
 const LIENS = [
   { href: "/programmes", libelle: "Programmes" },
+  { href: "/mentorat", libelle: "Mentorat" },
+  { href: "/publications", libelle: "Publications" },
+  { href: "/opportunites", libelle: "Opportunités" },
   { href: "/le-cabinet", libelle: "Le cabinet" },
   { href: "/contact", libelle: "Contact" },
 ] as const;
 
-export function Sigle({ className = "" }: { className?: string }) {
-  return (
-    <span
-      className={`flex items-center gap-2 text-[1.12rem] font-extrabold tracking-[-0.055em] ${className}`}
-    >
-      <svg width="26" height="10" viewBox="0 0 118 26" fill="none" aria-hidden="true">
-        <path
-          d="M4 24 C 22 2, 96 2, 114 24"
-          stroke="currentColor"
-          strokeWidth="7"
-          strokeLinecap="round"
-        />
-      </svg>
-      SCG
-    </span>
-  );
-}
+/* Navigation claire, comme la référence : bandeau d'annonce marine, puis
+   barre blanche avec logo, liens et actions. Sous 1024 px les liens passent
+   sur une ligne défilante en dessous, sans JavaScript.
 
-/* La nav en pilule flottante, sur fond nuit. Sous 768 px les liens laissent
-   place à un menu déplié en dessous – pas de tiroir à JavaScript pour quatre
-   entrées, ça marche même si le script ne part pas. */
-export function Navigation({ actif }: { actif?: string }) {
+   Elle ne lit pas le cookie de session, exprès : les pages publiques sont
+   générées statiquement et mises en cache, et une lecture de cookie les
+   rendrait dynamiques. « Mon espace » redirige vers la connexion si besoin,
+   « Connexion » redirige vers l'espace si l'on est déjà connecté. */
+export function Navigation({
+  actif,
+  annonce,
+}: {
+  actif?: string;
+  annonce?: { texte: string; href?: string; accent?: string };
+}) {
   return (
-    <header className="relative z-[4]">
+    <header className="relative z-20 bg-white">
+      {annonce && (
+        <div className="bg-marine text-center text-[0.8rem] text-white">
+          <div className="mx-auto max-w-[1180px] px-4 py-2">
+            {annonce.href ? (
+              <Link href={annonce.href} className="no-underline hover:underline">
+                {annonce.texte}
+                {annonce.accent && <span className="ml-1 font-semibold text-soleil">{annonce.accent}</span>}
+              </Link>
+            ) : (
+              <>
+                {annonce.texte}
+                {annonce.accent && <span className="ml-1 font-semibold text-soleil">{annonce.accent}</span>}
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       <nav
         aria-label="Navigation principale"
-        className="mx-auto flex max-w-[1010px] items-center gap-[18px] rounded-full border border-white/15 bg-white/8 px-4 py-[11px] backdrop-blur-[9px]"
+        className="mx-auto flex max-w-[1180px] items-center gap-6 px-4 py-3.5 sm:px-6"
       >
-        <Link href="/" className="text-white no-underline">
-          <Sigle />
-          <span className="sr-only-scg">SCG, Strategic Consulting Group – accueil</span>
+        <Link href="/" className="shrink-0 no-underline">
+          <Logo hauteur={34} />
         </Link>
 
-        <ul className="flex flex-1 list-none gap-[18px] pl-0 text-[0.79rem] font-medium max-md:hidden">
+        <ul className="hidden flex-1 list-none items-center justify-center gap-7 pl-0 text-[0.9rem] font-semibold lg:flex">
           {LIENS.map((l) => (
             <li key={l.href}>
               <Link
                 href={l.href}
                 aria-current={actif === l.href ? "page" : undefined}
                 className={`no-underline transition-colors ${
-                  actif === l.href
-                    ? "font-semibold text-white"
-                    : "text-[#b7cbdd] hover:text-white"
+                  actif === l.href ? "text-canard" : "text-marine hover:text-canard"
                 }`}
               >
                 {l.libelle}
@@ -62,24 +71,24 @@ export function Navigation({ actif }: { actif?: string }) {
           ))}
         </ul>
 
-        <span className="flex-1 md:hidden" />
-
-        {/* L'espace membre arrive à l'étape 3, avec les comptes. */}
-        <BoutonLien href="/programmes" variante="laiton" taille="sm">
-          Voir le calendrier
-        </BoutonLien>
+        <div className="ml-auto flex items-center gap-2 lg:ml-0">
+          <BoutonLien href="/connexion" variante="discret" taille="sm">
+            Connexion
+          </BoutonLien>
+          <BoutonLien href="/espace" variante="canard" taille="sm">
+            Mon espace
+          </BoutonLien>
+        </div>
       </nav>
 
-      <ul className="mx-auto mt-2 flex max-w-[1010px] list-none flex-wrap gap-2 px-1 pl-0 md:hidden">
+      <ul className="mx-auto flex max-w-[1180px] list-none gap-2 overflow-x-auto px-4 pb-3 pl-4 text-[0.82rem] font-semibold lg:hidden [scrollbar-width:none]">
         {LIENS.map((l) => (
-          <li key={l.href}>
+          <li key={l.href} className="shrink-0">
             <Link
               href={l.href}
               aria-current={actif === l.href ? "page" : undefined}
-              className={`inline-block rounded-full border px-[13px] py-1.5 text-[0.78rem] font-semibold no-underline ${
-                actif === l.href
-                  ? "border-laiton bg-laiton text-[#1a1204]"
-                  : "border-white/22 bg-white/7 text-[#dce7f1]"
+              className={`inline-block rounded-full px-3.5 py-1.5 no-underline ${
+                actif === l.href ? "bg-canard text-white" : "bg-brume text-marine"
               }`}
             >
               {l.libelle}

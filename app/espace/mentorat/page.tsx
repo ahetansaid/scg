@@ -91,7 +91,7 @@ export default async function MonMentorat(props: PageProps<"/espace/mentorat">) 
                 {recues.map((d) => (
                   <li
                     key={d.id}
-                    className="flex flex-wrap items-start justify-between gap-3 border-b border-ligne-douce pb-3 last:border-b-0 last:pb-0"
+                    className="flex flex-wrap items-start justify-between gap-3 border-b border-ligne pb-3 last:border-b-0 last:pb-0"
                   >
                     <span>
                       <Link
@@ -146,7 +146,7 @@ export default async function MonMentorat(props: PageProps<"/espace/mentorat">) 
                     {!c.pris && (
                       <form action={retirerCreneau}>
                         <input type="hidden" name="creneau" value={c.id} />
-                        <Bouton type="submit" variante="fantomeClair" taille="sm">
+                        <Bouton type="submit" variante="contourMarine" taille="sm">
                           Retirer
                         </Bouton>
                       </form>
@@ -174,7 +174,7 @@ export default async function MonMentorat(props: PageProps<"/espace/mentorat">) 
             {envoyees.map((d) => (
               <li
                 key={d.id}
-                className="flex flex-wrap items-start justify-between gap-3 border-b border-ligne-douce pb-3 last:border-b-0 last:pb-0"
+                className="flex flex-wrap items-start justify-between gap-3 border-b border-ligne pb-3 last:border-b-0 last:pb-0"
               >
                 <span>
                   <Link

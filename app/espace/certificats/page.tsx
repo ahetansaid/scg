@@ -36,13 +36,13 @@ export default async function Certificats() {
             <Panneau key={c.numero}>
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <h2 className="t-italique text-[1.24rem] leading-tight">{c.titre}</h2>
+                  <h2 className="font-bold text-[1.24rem] leading-tight">{c.titre}</h2>
                   <p className="mt-1.5 text-[0.83rem] text-gris">
                     Émis le {formatLong.format(c.emisAt)} · session {c.reference}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="t-balise text-[0.58rem] text-gris">Numéro</p>
+                  <p className="t-etiquette text-[0.58rem] text-gris">Numéro</p>
                   <p className="t-chiffres mt-0.5 font-mono text-[0.95rem] font-semibold text-marine">
                     {c.numero}
                   </p>

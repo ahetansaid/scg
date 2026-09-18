@@ -98,7 +98,7 @@ export default async function AdminOpportunites(props: PageProps<"/admin/opportu
         ) : (
           <div className="flex flex-col gap-4">
             {liste.map((o) => (
-              <details key={o.id} className="rounded-carte border border-ligne-douce p-4">
+              <details key={o.id} className="rounded-carte border border-ligne p-4">
                 <summary className="flex cursor-pointer flex-wrap items-center justify-between gap-3">
                   <span>
                     <b className="text-[0.95rem] font-semibold">{o.titre}</b>
@@ -118,7 +118,7 @@ export default async function AdminOpportunites(props: PageProps<"/admin/opportu
                   <Etiquette etat={STATUT[o.statut].etat}>{STATUT[o.statut].texte}</Etiquette>
                 </summary>
 
-                <form action={enregistrerOpportunite} className="mt-4 flex flex-col gap-4 border-t border-ligne-douce pt-4">
+                <form action={enregistrerOpportunite} className="mt-4 flex flex-col gap-4 border-t border-ligne pt-4">
                   <input type="hidden" name="id" value={o.id} />
                   <div className="grid gap-4 sm:grid-cols-[2fr_1fr]">
                     <Champ id={`t-${o.id}`} name="titre" label="Titre" required maxLength={250} defaultValue={o.titre} />

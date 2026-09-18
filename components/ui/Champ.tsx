@@ -1,17 +1,16 @@
 import type { ComponentProps, ReactNode } from "react";
 
 /* ============================================================================
-   Champs de formulaire, version papier.
-   Un seul endroit décide de l'apparence d'un champ : sinon la moitié des
-   formulaires dérive au premier ajout.
+   Champs de formulaire. Un seul endroit décide de l'apparence d'un champ :
+   sinon la moitié des formulaires dérive au premier ajout.
    ============================================================================ */
 
 export const classeChamp =
-  "w-full rounded-champ border border-ligne bg-white px-3.5 py-2.5 text-[0.94rem] " +
-  "outline-none transition-colors focus:border-marine focus:ring-2 focus:ring-marine/20 " +
-  "disabled:bg-papier-2 disabled:text-gris";
+  "w-full rounded-champ border border-ligne bg-white px-3.5 py-2.5 text-[0.95rem] " +
+  "outline-none transition-colors focus:border-canard focus:ring-4 focus:ring-canard/12 " +
+  "disabled:bg-brume disabled:text-gris";
 
-export const classeLabel = "t-balise mb-1.5 block text-[0.6rem] text-gris";
+export const classeLabel = "mb-1.5 block text-[0.84rem] font-semibold text-marine";
 
 export function Champ({
   label,
@@ -25,7 +24,7 @@ export function Champ({
         {label}
       </label>
       <input id={id} className={classeChamp} {...reste} />
-      {aide && <p className="mt-1 text-[0.78rem] text-gris">{aide}</p>}
+      {aide && <p className="mt-1 text-[0.8rem] text-gris">{aide}</p>}
     </div>
   );
 }
@@ -42,7 +41,7 @@ export function ChampTexte({
         {label}
       </label>
       <textarea id={id} className={classeChamp} {...reste} />
-      {aide && <p className="mt-1 text-[0.78rem] text-gris">{aide}</p>}
+      {aide && <p className="mt-1 text-[0.8rem] text-gris">{aide}</p>}
     </div>
   );
 }
@@ -62,18 +61,17 @@ export function ChampListe({
       <select id={id} className={classeChamp} {...reste}>
         {children}
       </select>
-      {aide && <p className="mt-1 text-[0.78rem] text-gris">{aide}</p>}
+      {aide && <p className="mt-1 text-[0.8rem] text-gris">{aide}</p>}
     </div>
   );
 }
 
-/* Message de résultat. Un message d'erreur dit ce qui ne va pas ET comment
-   le réparer – pas d'excuses, pas de vague. */
+/* Un message d'erreur dit ce qui ne va pas ET comment le réparer. */
 export function Alerte({ nature, children }: { nature: "succes" | "erreur"; children: ReactNode }) {
   const ton =
     nature === "succes"
-      ? "border-vert/30 bg-[#e2f0e8] text-vert"
-      : "border-terre/30 bg-[#fae4de] text-terre";
+      ? "border-canard/30 bg-canard-clair text-canard-fonce"
+      : "border-terre/30 bg-pastel-corail text-terre";
   return (
     <p
       role={nature === "succes" ? "status" : "alert"}

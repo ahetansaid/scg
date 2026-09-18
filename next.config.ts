@@ -22,6 +22,12 @@ const nextConfig: NextConfig = {
   /* Inutile d'annoncer le framework à chaque réponse. */
   poweredByHeader: false,
 
+  images: {
+    /* Visuels temporaires (lib/photos.ts). À retirer quand les photos de
+       SCG seront dans public/. */
+    remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
+  },
+
   async headers() {
     return [{ source: "/(.*)", headers: ENTETES }];
   },

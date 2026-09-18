@@ -95,7 +95,7 @@ export default async function AdminSession(props: PageProps<"/admin/sessions/[id
           </>
         }
         actions={
-          <BoutonLien href={`/admin/programmes/${ligne.programmeId}`} variante="fantomeClair" taille="sm">
+          <BoutonLien href={`/admin/programmes/${ligne.programmeId}`} variante="contourMarine" taille="sm">
             Le programme
           </BoutonLien>
         }
@@ -114,13 +114,13 @@ export default async function AdminSession(props: PageProps<"/admin/sessions/[id
 
       <Panneau titre={`Les ${s.capacite} places`} extra={`clôture le ${formatLong.format(s.clotureAt)}`}>
         <Cohorte capacite={s.capacite} sieges={sieges} taille="md" />
-        <div className="t-balise mt-3.5 flex flex-wrap gap-x-5 gap-y-2 text-[0.56rem] text-gris">
+        <div className="t-etiquette mt-3.5 flex flex-wrap gap-x-5 gap-y-2 text-[0.56rem] text-gris">
           <span className="inline-flex items-center gap-1.5">
             <i className="block size-2.5 rounded-[2px] bg-vert" />
             {confirmees.length} {pluriel(confirmees.length, "confirmée")}
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <i className="block size-2.5 rounded-[2px] bg-laiton" />
+            <i className="block size-2.5 rounded-[2px] bg-soleil" />
             {attente.length} en attente
           </span>
           <span className="inline-flex items-center gap-1.5">
@@ -142,7 +142,7 @@ export default async function AdminSession(props: PageProps<"/admin/sessions/[id
                   {["Participant", "Structure", "Demandée le", "Statut", "Actions"].map((t) => (
                     <th
                       key={t}
-                      className="t-balise border-b border-ligne px-3 pb-2.5 text-left text-[0.56rem] font-medium whitespace-nowrap text-gris"
+                      className="t-etiquette border-b border-ligne px-3 pb-2.5 text-left text-[0.56rem] font-medium whitespace-nowrap text-gris"
                     >
                       {t}
                     </th>
@@ -152,7 +152,7 @@ export default async function AdminSession(props: PageProps<"/admin/sessions/[id
               <tbody>
                 {inscrits.map((i) => (
                   <tr key={i.id}>
-                    <td className="border-b border-ligne-douce px-3 py-2.5">
+                    <td className="border-b border-ligne px-3 py-2.5">
                       <b className="font-semibold">
                         {[i.prenom, i.nom].filter(Boolean).join(" ") || "–"}
                       </b>
@@ -163,14 +163,14 @@ export default async function AdminSession(props: PageProps<"/admin/sessions/[id
                         </span>
                       )}
                     </td>
-                    <td className="border-b border-ligne-douce px-3 py-2.5">{i.structure || "–"}</td>
-                    <td className="border-b border-ligne-douce px-3 py-2.5 whitespace-nowrap">
+                    <td className="border-b border-ligne px-3 py-2.5">{i.structure || "–"}</td>
+                    <td className="border-b border-ligne px-3 py-2.5 whitespace-nowrap">
                       {formatDateHeure.format(i.inscritAt)}
                     </td>
-                    <td className="border-b border-ligne-douce px-3 py-2.5">
+                    <td className="border-b border-ligne px-3 py-2.5">
                       <Etiquette etat={ETAT[i.statut].etat}>{ETAT[i.statut].texte}</Etiquette>
                     </td>
-                    <td className="border-b border-ligne-douce px-3 py-2.5">
+                    <td className="border-b border-ligne px-3 py-2.5">
                       <div className="flex flex-wrap gap-1.5">
                         {i.statut === "en_attente" && (
                           <form action={changerStatutInscription}>
@@ -187,7 +187,7 @@ export default async function AdminSession(props: PageProps<"/admin/sessions/[id
                             <input type="hidden" name="inscription" value={i.id} />
                             <input type="hidden" name="session" value={s.id} />
                             <input type="hidden" name="statut" value="annulee" />
-                            <Bouton type="submit" variante="fantomeClair" taille="sm">
+                            <Bouton type="submit" variante="contourMarine" taille="sm">
                               Annuler
                             </Bouton>
                           </form>
@@ -196,7 +196,7 @@ export default async function AdminSession(props: PageProps<"/admin/sessions/[id
                           <form action={emettreCertificat}>
                             <input type="hidden" name="inscription" value={i.id} />
                             <input type="hidden" name="session" value={s.id} />
-                            <Bouton type="submit" variante="fantomeClair" taille="sm">
+                            <Bouton type="submit" variante="contourMarine" taille="sm">
                               Émettre le certificat
                             </Bouton>
                           </form>

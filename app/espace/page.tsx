@@ -42,8 +42,8 @@ export default async function Espace() {
       />
 
       {etapes.length > 0 && (
-        <section className="mb-3.5 overflow-hidden rounded-carte bg-nuit p-5 text-[#dce7f1]">
-          <p className="t-balise text-[0.6rem] text-[#7fa3c4]">Votre trajectoire</p>
+        <section className="mb-3.5 overflow-hidden rounded-carte bg-marine p-5 text-[#dce7f1]">
+          <p className="t-etiquette text-[0.6rem] text-[#7fa3c4]">Votre trajectoire</p>
           <p className="mt-1 text-[1.02rem] font-bold tracking-[-0.025em] text-white">
             {etapes.filter((e) => e.etat === "termine").length} sur {etapes.length}{" "}
             {pluriel(etapes.length, "programme")}
@@ -74,7 +74,7 @@ export default async function Espace() {
                   <span
                     aria-hidden="true"
                     className={`mt-1.5 block size-2 shrink-0 rounded-full ${
-                      e.nature === "mentorat" ? "bg-azur" : "bg-laiton"
+                      e.nature === "mentorat" ? "bg-canard" : "bg-soleil"
                     }`}
                   />
                   <span>
@@ -102,7 +102,7 @@ export default async function Espace() {
                       {i.seancesTotal > 0 ? `${i.seancesFaites}/${i.seancesTotal}` : "–"}
                     </span>
                   </div>
-                  <div className="h-1.5 overflow-hidden rounded-full bg-papier-2">
+                  <div className="h-1.5 overflow-hidden rounded-full bg-brume-2">
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-marine to-azur"
                       style={{ width: `${i.progression}%` }}
@@ -112,13 +112,13 @@ export default async function Espace() {
               ))}
 
               {enAttente.length > 0 && (
-                <p className="m-0 border-t border-ligne-douce pt-3 text-[0.82rem] text-gris">
+                <p className="m-0 border-t border-ligne pt-3 text-[0.82rem] text-gris">
                   {enAttente.length} {pluriel(enAttente.length, "demande")}{" "}
                   {pluriel(enAttente.length, "en attente de confirmation")}.
                 </p>
               )}
 
-              <BoutonLien href="/espace/programmes" variante="fantomeClair" taille="sm" className="self-start">
+              <BoutonLien href="/espace/programmes" variante="contourMarine" taille="sm" className="self-start">
                 Tout voir
               </BoutonLien>
             </div>
@@ -138,7 +138,7 @@ export default async function Espace() {
                   >
                     {s.titre}
                   </Link>
-                  <span className="t-balise mt-0.5 block text-[0.58rem] text-gris">
+                  <span className="t-etiquette mt-0.5 block text-[0.58rem] text-gris">
                     {formatDateHeure.format(s.debut)} · {montant(s.prixFcfa)} FCFA
                   </span>
                 </span>

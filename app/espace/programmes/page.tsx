@@ -73,10 +73,10 @@ export default async function MesProgrammes(props: PageProps<"/espace/programmes
               <Panneau key={i.id}>
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <p className="t-balise text-[0.58rem] text-laiton-fonce">
+                    <p className="t-etiquette text-[0.58rem] text-canard">
                       {LIBELLE_NATURE[i.programme.nature]} · {i.programme.domaine}
                     </p>
-                    <h2 className="t-italique mt-1 text-[1.24rem] leading-tight">
+                    <h2 className="font-bold mt-1 text-[1.24rem] leading-tight">
                       <Link
                         href={`/programmes/${i.programme.slug}`}
                         className="text-encre no-underline hover:text-marine"
@@ -99,14 +99,14 @@ export default async function MesProgrammes(props: PageProps<"/espace/programmes
                 </div>
 
                 {i.statut === "confirmee" && i.seancesTotal > 0 && (
-                  <div className="mt-4 border-t border-ligne-douce pt-3.5">
+                  <div className="mt-4 border-t border-ligne pt-3.5">
                     <div className="flex justify-between gap-3 text-[0.8rem]">
                       <span className="font-semibold">Progression</span>
                       <span className="t-chiffres font-mono text-[0.72rem] text-gris">
                         {i.seancesFaites}/{i.seancesTotal} séances · {i.progression} %
                       </span>
                     </div>
-                    <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-papier-2">
+                    <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-brume-2">
                       <div
                         className="h-full rounded-full bg-gradient-to-r from-marine to-azur"
                         style={{ width: `${i.progression}%` }}
@@ -116,9 +116,9 @@ export default async function MesProgrammes(props: PageProps<"/espace/programmes
                 )}
 
                 {i.statut === "en_attente" && (
-                  <form action={annulerMonInscription} className="mt-4 border-t border-ligne-douce pt-3.5">
+                  <form action={annulerMonInscription} className="mt-4 border-t border-ligne pt-3.5">
                     <input type="hidden" name="inscription" value={i.id} />
-                    <Bouton type="submit" variante="fantomeClair" taille="sm">
+                    <Bouton type="submit" variante="contourMarine" taille="sm">
                       Retirer ma demande
                     </Bouton>
                   </form>

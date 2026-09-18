@@ -210,7 +210,7 @@ export default async function Admin() {
                     >
                       {s.titre}
                     </Link>
-                    <span className="t-balise mt-0.5 block text-[0.56rem] text-gris">
+                    <span className="t-etiquette mt-0.5 block text-[0.56rem] text-gris">
                       {s.reference} · {formatLong.format(s.debut)}
                     </span>
                   </span>
@@ -220,13 +220,13 @@ export default async function Admin() {
             })}
           </ul>
         )}
-        <p className="t-balise mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-ligne-douce pt-3 text-[0.56rem] text-gris">
+        <p className="t-etiquette mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-ligne pt-3 text-[0.56rem] text-gris">
           <span className="inline-flex items-center gap-1.5">
             <i className="block size-2 rounded-[2px] bg-vert" />
             confirmé
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <i className="block size-2 rounded-[2px] bg-laiton" />
+            <i className="block size-2 rounded-[2px] bg-soleil" />
             en attente
           </span>
           <span className="inline-flex items-center gap-1.5">

@@ -68,7 +68,7 @@ export default async function AdminMembres(props: PageProps<"/admin/membres">) {
                   {["Compte", "Structure", "Inscrit le", "Programmes", "Rôle"].map((t) => (
                     <th
                       key={t}
-                      className="t-balise border-b border-ligne px-3 pb-2.5 text-left text-[0.56rem] font-medium whitespace-nowrap text-gris"
+                      className="t-etiquette border-b border-ligne px-3 pb-2.5 text-left text-[0.56rem] font-medium whitespace-nowrap text-gris"
                     >
                       {t}
                     </th>
@@ -78,7 +78,7 @@ export default async function AdminMembres(props: PageProps<"/admin/membres">) {
               <tbody>
                 {liste.map((m) => (
                   <tr key={m.id}>
-                    <td className="border-b border-ligne-douce px-3 py-2.5">
+                    <td className="border-b border-ligne px-3 py-2.5">
                       <b className="font-semibold">
                         {[m.prenom, m.nom].filter(Boolean).join(" ") || "–"}
                       </b>
@@ -87,14 +87,14 @@ export default async function AdminMembres(props: PageProps<"/admin/membres">) {
                         <span className="block font-mono text-[0.72rem] text-gris">{m.telephone}</span>
                       )}
                     </td>
-                    <td className="border-b border-ligne-douce px-3 py-2.5">{m.structure || "–"}</td>
-                    <td className="border-b border-ligne-douce px-3 py-2.5 whitespace-nowrap">
+                    <td className="border-b border-ligne px-3 py-2.5">{m.structure || "–"}</td>
+                    <td className="border-b border-ligne px-3 py-2.5 whitespace-nowrap">
                       {formatLong.format(m.creeAt)}
                     </td>
-                    <td className="t-chiffres border-b border-ligne-douce px-3 py-2.5 text-right font-semibold">
+                    <td className="t-chiffres border-b border-ligne px-3 py-2.5 text-right font-semibold">
                       {Number(m.inscriptions)}
                     </td>
-                    <td className="border-b border-ligne-douce px-3 py-2.5">
+                    <td className="border-b border-ligne px-3 py-2.5">
                       {m.id === utilisateur.id ? (
                         <span className="text-gris">{LIBELLE_ROLE[m.role]} (vous)</span>
                       ) : (
@@ -112,7 +112,7 @@ export default async function AdminMembres(props: PageProps<"/admin/membres">) {
                               </option>
                             ))}
                           </select>
-                          <Bouton type="submit" variante="fantomeClair" taille="sm">
+                          <Bouton type="submit" variante="contourMarine" taille="sm">
                             Appliquer
                           </Bouton>
                         </form>

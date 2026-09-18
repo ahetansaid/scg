@@ -1,38 +1,32 @@
 import type { ReactNode } from "react";
 
 /* ============================================================================
-   Étiquette d'état.
-   Les couleurs de statut – vert, laiton, terre – ne servent qu'ici et sur la
-   cohorte. Jamais de décoration avec ces trois-là.
+   Étiquette d'état. Petite, arrondie, sur fond pastel. Les couleurs de statut
+   ne servent qu'ici et sur la cohorte : jamais de décoration avec.
    ============================================================================ */
 
-const SUR_NUIT = {
-  ouvert: "bg-vert/18 text-vert-clair border-vert-clair/30",
-  bientot: "bg-laiton/18 text-[#e0b457] border-[#e0b457]/32",
-  complet: "bg-terre/20 text-terre-clair border-terre-clair/28",
-  certifiante: "bg-azur/18 text-[#8cc5e8] border-[#8cc5e8]/28",
-} as const;
-
-const SUR_PAPIER = {
-  ouvert: "bg-[#e2f0e8] text-vert border-transparent",
-  bientot: "bg-[#fbf0dc] text-[#7a5310] border-transparent",
-  complet: "bg-[#fae4de] text-terre border-transparent",
-  certifiante: "bg-[#dfebf4] text-[#1b537c] border-transparent",
+const TON = {
+  ouvert: "bg-canard-clair text-canard-fonce",
+  bientot: "bg-pastel-soleil text-[#8a5f14]",
+  complet: "bg-pastel-corail text-terre",
+  certifiante: "bg-pastel-ciel text-marine",
+  neutre: "bg-brume-2 text-gris",
 } as const;
 
 export function Etiquette({
   etat,
-  fond = "papier",
   children,
+  className = "",
 }: {
-  etat: keyof typeof SUR_NUIT;
+  etat: keyof typeof TON;
+  /** Conservé pour compatibilité : le rendu est le même sur tous les fonds. */
   fond?: "papier" | "nuit";
   children: ReactNode;
+  className?: string;
 }) {
-  const ton = fond === "nuit" ? SUR_NUIT[etat] : SUR_PAPIER[etat];
   return (
     <span
-      className={`t-balise inline-block rounded-etiquette border px-[9px] py-[4px] text-[0.6rem] font-semibold tracking-[0.14em] ${ton}`}
+      className={`inline-block rounded-full px-2.5 py-1 text-[0.72rem] font-semibold ${TON[etat]} ${className}`}
     >
       {children}
     </span>

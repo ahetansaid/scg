@@ -2,12 +2,11 @@ import Link from "next/link";
 
 import { estAdministration, type Utilisateur } from "@/lib/auth";
 
-import { Sigle } from "./Navigation";
+import { Logo } from "./Logo";
 
 /* ============================================================================
-   Ossature des zones connectées.
-   Espace membre et back-office partagent exactement la même : barre latérale
-   nuit, plan de travail papier. Un seul squelette à maintenir.
+   Ossature des zones connectées. Espace membre et back-office partagent la
+   même : barre latérale blanche, plan de travail gris très clair.
    ============================================================================ */
 
 type Entree = { href: string; libelle: string };
@@ -72,31 +71,25 @@ export function Application({
   const groupes = zone === "admin" ? ADMIN : MEMBRE;
 
   return (
-    <div className="grid min-h-screen md:grid-cols-[210px_1fr]">
-      <aside className="flex flex-col gap-1 border-r border-white/8 bg-nuit p-3.5 max-md:flex-row max-md:flex-wrap max-md:items-center max-md:gap-2">
-        <Link href="/" className="flex items-center gap-2 px-2.5 pb-3.5 text-white no-underline max-md:pb-0">
-          <Sigle />
+    <div className="grid min-h-screen bg-brume md:grid-cols-[236px_1fr]">
+      <aside className="flex flex-col gap-1 border-r border-ligne bg-white p-4 max-md:flex-row max-md:flex-wrap max-md:items-center max-md:gap-2">
+        <Link href="/" className="flex items-center gap-2 px-2 pb-4 no-underline max-md:pb-0">
+          <Logo hauteur={30} />
           {zone === "admin" && (
-            <span className="t-balise text-[0.53rem] text-laiton-vif">Admin</span>
+            <span className="rounded-full bg-pastel-soleil px-2 py-0.5 text-[0.66rem] font-bold text-[#8a5f14]">Admin</span>
           )}
         </Link>
 
         {groupes.map((g, i) => (
           <nav key={g.titre ?? i} aria-label={g.titre ?? "Principal"} className="contents md:block">
-            {g.titre && (
-              <p className="t-balise px-2.5 pt-4 pb-1.5 text-[0.56rem] text-[#5f7b96] max-md:hidden">
-                {g.titre}
-              </p>
-            )}
+            {g.titre && <p className="px-3 pt-4 pb-1.5 text-[0.72rem] font-bold text-gris max-md:hidden">{g.titre}</p>}
             {g.entrees.map((e) => (
               <Link
                 key={e.href}
                 href={e.href}
                 aria-current={actif === e.href ? "page" : undefined}
-                className={`block rounded-[9px] px-2.5 py-2 text-[0.82rem] no-underline transition-colors ${
-                  actif === e.href
-                    ? "bg-laiton/16 font-semibold text-[#e0b457]"
-                    : "text-[#9fb8ce] hover:bg-white/5 hover:text-white"
+                className={`block rounded-puce px-3 py-2 text-[0.88rem] font-semibold no-underline transition-colors ${
+                  actif === e.href ? "bg-canard-clair text-canard-fonce" : "text-marine hover:bg-brume"
                 }`}
               >
                 {e.libelle}
@@ -105,11 +98,11 @@ export function Application({
           </nav>
         ))}
 
-        <div className="mt-auto border-t border-white/10 pt-3 max-md:mt-0 max-md:w-full max-md:border-t-0 max-md:pt-0">
+        <div className="mt-auto border-t border-ligne pt-3 max-md:mt-0 max-md:w-full max-md:border-t-0 max-md:pt-0">
           {estAdministration(utilisateur.role) && (
             <Link
               href={zone === "admin" ? "/espace" : "/admin"}
-              className="block rounded-[9px] px-2.5 py-2 text-[0.8rem] text-[#9fb8ce] no-underline hover:text-white"
+              className="block rounded-puce px-3 py-2 text-[0.85rem] font-semibold text-gris no-underline hover:text-marine"
             >
               {zone === "admin" ? "↩ Mon espace" : "→ Back-office"}
             </Link>
@@ -117,7 +110,7 @@ export function Application({
           <form action="/deconnexion" method="post">
             <button
               type="submit"
-              className="w-full cursor-pointer rounded-[9px] px-2.5 py-2 text-left text-[0.8rem] text-[#9fb8ce] hover:text-white"
+              className="w-full cursor-pointer rounded-puce px-3 py-2 text-left text-[0.85rem] font-semibold text-gris hover:text-marine"
             >
               Se déconnecter
             </button>
@@ -125,12 +118,11 @@ export function Application({
         </div>
       </aside>
 
-      <main className="bg-papier p-5 sm:p-7">{children}</main>
+      <main className="p-5 sm:p-8">{children}</main>
     </div>
   );
 }
 
-/* En-tête de page interne : titre, sous-titre, actions à droite. */
 export function TitrePage({
   surtitre,
   titre,
@@ -147,12 +139,12 @@ export function TitrePage({
   return (
     <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
       <div>
-        {surtitre && <p className="t-balise text-[0.6rem] text-laiton-fonce">{surtitre}</p>}
-        <h1 className="mt-1.5 text-[1.65rem] leading-none font-extrabold tracking-[-0.04em]">
+        {surtitre && <p className="t-sur">{surtitre}</p>}
+        <h1 className="mt-1 text-[1.7rem] leading-tight font-extrabold tracking-[-0.025em] text-marine">
           {titre}
-          {accent && <em className="t-italique ml-2 font-normal text-laiton-fonce">{accent}</em>}
+          {accent && <span className="ml-2 text-canard">{accent}</span>}
         </h1>
-        {sous && <p className="mt-2 text-[0.83rem] text-gris">{sous}</p>}
+        {sous && <p className="mt-2 text-[0.88rem] text-gris">{sous}</p>}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
     </div>
@@ -171,11 +163,11 @@ export function Panneau({
   className?: string;
 }) {
   return (
-    <section className={`rounded-carte border border-ligne bg-white p-4 sm:p-5 ${className}`}>
+    <section className={`rounded-carte border border-ligne bg-white p-5 shadow-carte sm:p-6 ${className}`}>
       {titre && (
-        <h2 className="mb-3.5 flex items-baseline justify-between gap-3 text-[0.85rem] font-bold tracking-[-0.02em]">
+        <h2 className="mb-4 flex items-baseline justify-between gap-3 text-[0.95rem] font-bold text-marine">
           {titre}
-          {extra && <span className="t-balise text-[0.6rem] font-normal text-gris">{extra}</span>}
+          {extra && <span className="text-[0.78rem] font-semibold text-gris">{extra}</span>}
         </h2>
       )}
       {children}
@@ -186,7 +178,7 @@ export function Panneau({
 /* Un état vide dit quoi faire ensuite, sinon il ressemble à une panne. */
 export function Vide({ children }: { children: React.ReactNode }) {
   return (
-    <p className="rounded-carte border border-dashed border-ligne bg-white/60 px-5 py-6 text-[0.9rem] text-gris">
+    <p className="rounded-carte border border-dashed border-ligne bg-white px-5 py-6 text-[0.92rem] text-gris">
       {children}
     </p>
   );

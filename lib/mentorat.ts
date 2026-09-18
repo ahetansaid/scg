@@ -31,6 +31,7 @@ export type MentorVue = {
   presentation: string;
   quotaMensuel: number;
   creneauxLibres: number;
+  avatarUrl: string | null;
 };
 
 function initiales(prenom: string, nom: string, repli: string) {
@@ -52,6 +53,7 @@ const CHAMPS = {
   userId: mentors.userId,
   prenom: profiles.prenom,
   nom: profiles.nom,
+  avatarUrl: profiles.avatarUrl,
   email: users.email,
 };
 
@@ -77,6 +79,7 @@ function assembler(
     quotaMensuel: number;
     prenom: string | null;
     nom: string | null;
+    avatarUrl: string | null;
     email: string;
   },
   libres: number,
@@ -94,6 +97,7 @@ function assembler(
     presentation: l.presentation,
     quotaMensuel: l.quotaMensuel,
     creneauxLibres: libres,
+    avatarUrl: l.avatarUrl,
   };
 }
 

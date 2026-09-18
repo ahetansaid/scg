@@ -1,156 +1,169 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   L'ARC – socle de design SCG
-   Registre : bi-thème alterné nuit / papier / laiton.
-   Trois motifs porteurs : l'arc (trajectoire), la cohorte (les places),
-   le ruban (le trimestre déplié).
-   Référence : Charte-graphique-SCG.pdf
+   SCG – socle de design, version claire
+   Registre : plateforme de formation, fond blanc, cartes arrondies à
+   vignette, un accent vert-canard pour l'action, un soulignement jaune
+   manuscrit pour le mot qui compte. Le marine du logo porte les titres.
    ========================================================================== */
 
 @theme {
-  /* --- Identité SCG. Ces valeurs ne suivent pas le thème du lecteur : --------
-     c'est la marque, elle est la même partout.                              */
-  --color-nuit: #06182f;
-  --color-nuit-2: #0a2646;
-  --color-marine: #0b2e5b;
+  /* --- Identité --------------------------------------------------------- */
+  --color-marine: #0b2e5b; /* logo SCG : titres, navigation, pied de page */
   --color-marine-clair: #164a85;
-  --color-papier: #eef0f2;
-  --color-papier-2: #e1e6ea;
-  --color-encre: #101820;
-  --color-laiton: #c08a2e;
-  --color-laiton-vif: #d89b34;
-  --color-laiton-fonce: #8a5f14;
-  --color-azur: #3e8fc1;
+  --color-nuit: #06182f;
+
+  /* --- Accent d'action ---------------------------------------------------- */
+  --color-canard: #14a08a;
+  --color-canard-fonce: #0f8672;
+  --color-canard-clair: #e6f6f3;
+
+  /* --- Soulignement et pastilles ------------------------------------------ */
+  --color-soleil: #f5c542;
+  --color-corail: #ff5a6e;
+  --color-mandarine: #f28c28;
+  --color-violet: #7c5cff;
+
+  /* --- Neutres, très légèrement froids ------------------------------------ */
+  --color-blanc: #ffffff;
+  --color-brume: #f6f8fb; /* fond des sections alternées */
+  --color-brume-2: #eef2f7;
+  --color-encre: #111c2e;
   --color-gris: #5c6b7a;
   --color-gris-clair: #93a0ac;
+  --color-ligne: #e3e8ef;
 
-  /* --- Statuts. Réservés aux états, jamais à la décoration. --------------- */
-  --color-vert: #1f6b4a;
-  --color-vert-clair: #4ed89b;
-  --color-terre: #9c3a22;
-  --color-terre-clair: #f09077;
+  /* --- Pastels des puces de domaine --------------------------------------- */
+  --color-pastel-violet: #f1eeff;
+  --color-pastel-corail: #ffeef0;
+  --color-pastel-canard: #e6f6f3;
+  --color-pastel-soleil: #fff6dc;
+  --color-pastel-ciel: #e8f3ff;
+  --color-pastel-mandarine: #fff0e1;
 
-  /* --- Lignes et surfaces dérivées ---------------------------------------- */
-  --color-ligne: #cbd4dc;
-  --color-ligne-douce: #dee4e9;
+  /* --- Statuts ------------------------------------------------------------ */
+  --color-vert: #1f9d63;
+  --color-terre: #d64545;
 
-  /* --- Trois voix typographiques ------------------------------------------
-     display : Bricolage Grotesque, interface et grands titres
-     italique : Instrument Serif, EN ITALIQUE SEULEMENT – voix humaine
-     mono : IBM Plex Mono, dates, indices, places                            */
-  --font-display: var(--font-bricolage), -apple-system, "Segoe UI", system-ui,
-    sans-serif;
-  --font-italique: var(--font-instrument), Georgia, "Times New Roman", serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo,
-    monospace;
+  /* --- Une seule famille, toute la gamme de graisses ---------------------- */
+  --font-sans: var(--font-jakarta), -apple-system, "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* --- Échelle typographique. Aucune taille hors de cette suite. ---------- */
-  --text-mono-xs: 0.61rem; /* balises en capitales */
-  --text-xs: 0.75rem; /* 12 */
-  --text-sm: 0.875rem; /* 14 */
-  --text-base: 1rem; /* 16 */
-  --text-lg: 1.25rem; /* 20 */
-  --text-xl: 1.5625rem; /* 25 */
-  --text-2xl: 2rem; /* 32 */
-  --text-3xl: 2.5rem; /* 40 */
-  --text-4xl: 3.5rem; /* 56 */
-  --text-5xl: 5.125rem; /* 82 */
-
-  /* --- Un rayon par rôle, pas un rayon partout ---------------------------- */
-  --radius-etiquette: 5px;
+  /* --- Rayons généreux, comme les références ----------------------------- */
+  --radius-puce: 12px;
+  --radius-carte: 20px;
+  --radius-grand: 28px;
   --radius-champ: 12px;
-  --radius-carte: 16px;
-  --radius-panneau: 18px;
-  --radius-cadre: 20px;
-}
 
-/* --------------------------------------------------------------------------
-   Base
-   -------------------------------------------------------------------------- */
+  /* --- Ombres douces ------------------------------------------------------ */
+  --shadow-carte: 0 10px 30px -12px rgba(11, 46, 91, 0.16);
+  --shadow-flottant: 0 24px 50px -20px rgba(11, 46, 91, 0.28);
+}
 
 :root {
   color-scheme: light;
 }
 
 body {
-  background-color: var(--color-papier);
+  background-color: var(--color-blanc);
   color: var(--color-encre);
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
   font-size: 1rem;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* La tension typographique de la charte : plus le titre est grand, plus
-   l'approche se resserre. C'est ce qui donne la densité – l'oublier casse
-   l'identité, donc c'est encodé ici et pas retapé à chaque usage. */
-.t-display {
-  font-family: var(--font-display);
+/* Titres : gras, marine, approche resserrée. */
+.t-hero {
   font-weight: 800;
-  font-size: clamp(2.4rem, 7.4vw, 5.125rem);
-  line-height: 0.86;
-  letter-spacing: -0.058em;
+  font-size: clamp(2.5rem, 6vw, 4.2rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  color: var(--color-marine);
   text-wrap: balance;
 }
 
 .t-h2 {
-  font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.6rem, 3.6vw, 2.5rem);
-  line-height: 0.98;
-  letter-spacing: -0.04em;
+  font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--color-marine);
   text-wrap: balance;
 }
 
 .t-h3 {
-  font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.25rem;
-  line-height: 1.15;
-  letter-spacing: -0.025em;
+  font-size: 1.15rem;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--color-marine);
 }
 
-/* La voix humaine. Jamais en romain : la fonte n'est chargée qu'en italique. */
-.t-italique {
-  font-family: var(--font-italique);
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.01em;
+/* Petit intitulé coloré au-dessus d'un titre : « Apprenez avec », etc. */
+.t-sur {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--color-canard);
 }
 
-/* Balise en capitales : dates, formats, lieux, indices. */
-.t-balise {
-  font-family: var(--font-mono);
-  font-size: var(--text-mono-xs);
-  font-weight: 500;
-  letter-spacing: 0.21em;
-  text-transform: uppercase;
+/* Le soulignement jaune manuscrit sous le mot qui compte. Un SVG en fond,
+   qui suit la largeur du mot et reste sous la ligne de base. */
+.souligne {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+.souligne::after {
+  content: "";
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: -0.12em;
+  height: 0.34em;
+  z-index: -1;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 20' preserveAspectRatio='none'><path d='M3 14 C 40 6, 90 4, 197 9' stroke='%23f5c542' stroke-width='7' stroke-linecap='round' fill='none'/></svg>")
+    no-repeat center / 100% 100%;
 }
 
-/* Les chiffres qui s'alignent en colonne s'alignent vraiment. */
 .t-chiffres {
   font-variant-numeric: tabular-nums;
 }
 
-/* --------------------------------------------------------------------------
-   Accessibilité
-   -------------------------------------------------------------------------- */
+/* Petite étiquette en capitales : intitulés de colonnes, métadonnées. */
+.t-etiquette {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Pastilles décoratives des références : petits ronds de couleur posés
+   librement dans les sections. Purement décoratives, donc aria-hidden. */
+.pastille {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+/* Trame de points, comme derrière les visuels des références. */
+.trame {
+  background-image: radial-gradient(circle, rgba(11, 46, 91, 0.16) 1.4px, transparent 1.6px);
+  background-size: 14px 14px;
+}
 
 :focus-visible {
-  outline: 2px solid var(--color-laiton);
+  outline: 2px solid var(--color-canard);
   outline-offset: 3px;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 ::selection {
-  background: var(--color-laiton);
+  background: var(--color-soleil);
   color: var(--color-nuit);
 }
 
-/* Réservé aux lecteurs d'écran : la cohorte et l'arc sont des graphiques,
-   ils ne doivent jamais être la seule source de l'information. */
 .sr-only-scg {
   position: absolute;
   width: 1px;
