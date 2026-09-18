@@ -97,10 +97,23 @@ export function EnTete({
           >
             {photo ? (
               <>
-                <Image src={photo} alt="" fill sizes="(max-width: 1400px) 100vw, 1400px" priority className="object-cover" />
+                {/* Dès 768 px, la photo est coupée en biais : marine à gauche,
+                    image à droite, un trait canard sur la diagonale. */}
+                <Image
+                  src={photo}
+                  alt=""
+                  fill
+                  sizes="(max-width: 1400px) 100vw, 1400px"
+                  priority
+                  className="object-cover md:[clip-path:polygon(34%_0,100%_0,100%_100%,18%_100%)]"
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 hidden bg-canard md:block md:[clip-path:polygon(33%_0,34.6%_0,18.6%_100%,17%_100%)]"
+                />
                 <div
                   aria-hidden="true"
-                  className="absolute inset-0 bg-[linear-gradient(90deg,rgba(6,24,47,.9)_0%,rgba(6,24,47,.6)_50%,rgba(6,24,47,.3)_100%)]"
+                  className="absolute inset-0 bg-[linear-gradient(90deg,rgba(6,24,47,.9)_0%,rgba(6,24,47,.6)_50%,rgba(6,24,47,.3)_100%)] md:bg-[linear-gradient(90deg,rgba(6,24,47,0)_0%,rgba(6,24,47,0)_30%,rgba(6,24,47,.55)_60%,rgba(6,24,47,.25)_100%)]"
                 />
               </>
             ) : (

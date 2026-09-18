@@ -10,6 +10,7 @@ import {
   HeroCarte,
   HeroLigne,
   HeroTexte,
+  HeroVisuel,
   Mots,
   Reveler,
   Souligne,
@@ -19,10 +20,10 @@ import { Navigation } from "@/components/Navigation";
 import { PiedDePage } from "@/components/PiedDePage";
 import { VideoFond } from "@/components/VideoFond";
 import { BoutonLien } from "@/components/ui/Bouton";
-import { CarteMentor, CarteProgramme, TitreSection } from "@/components/Vitrine";
+import { CarteDomaine, CarteMentor, CarteProgramme, Losanges, TitreSection } from "@/components/Vitrine";
 import { listerProgrammes, sessionsDuTrimestre } from "@/lib/catalogue";
 import { listerMentors } from "@/lib/mentorat";
-import { PHOTOS, portrait, VIDEOS } from "@/lib/photos";
+import { PHOTO_DOMAINE, PHOTOS, portrait, VIDEOS } from "@/lib/photos";
 import { listerArticles } from "@/lib/publications";
 import { dateCourte, DOMAINES, formatLong, montant, pluriel } from "@/lib/vocabulaire";
 
@@ -47,6 +48,35 @@ const ETAPES = [
   },
 ] as const;
 
+/* L'offre, en une ligne qui défile sous le hero. */
+const OFFRE = [
+  { libelle: "Masterclasses", href: "/programmes?nature=masterclass" },
+  { libelle: "Formations", href: "/programmes?nature=formation" },
+  { libelle: "Certifications", href: "/programmes?nature=certification" },
+  { libelle: "Mentorat", href: "/mentorat" },
+  { libelle: "Publications", href: "/publications" },
+  { libelle: "Opportunités", href: "/opportunites" },
+] as const;
+
+/* Les deux repères de la section cabinet. */
+const REPERES = [
+  {
+    titre: "Praticiens en exercice",
+    texte: "Chaque intervenant tient un poste aujourd'hui et enseigne sur ses propres cas.",
+    icone: <path d="M12 3l8 4-8 4-8-4 8-4zM4 11l8 4 8-4M4 15l8 4 8-4" strokeLinecap="round" strokeLinejoin="round" />,
+  },
+  {
+    titre: "Certificat vérifiable",
+    texte: "Un numéro unique par certificat, contrôlable en ligne par un employeur ou un partenaire.",
+    icone: (
+      <>
+        <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" strokeLinejoin="round" />
+        <path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
+      </>
+    ),
+  },
+] as const;
+
 export default async function Accueil() {
   const [programmes, sessions, mentors, articles] = await Promise.all([
     listerProgrammes(),
@@ -64,94 +94,121 @@ export default async function Accueil() {
       <Navigation />
 
       {/* ================================================================ HERO
-          Un cadre arrondi qui remplit l'écran, une séquence vidéo derrière un
-          voile marine, le titre en bas à gauche, la prochaine session en bas
-          à droite. Le mouvement vient de l'image ; le texte, lui, se pose. */}
-      <section className="px-3 pt-3 sm:px-4">
-        <div className="relative mx-auto flex min-h-[640px] max-w-[1400px] flex-col justify-end overflow-hidden rounded-grand bg-nuit text-white md:min-h-[min(88vh,820px)]">
-          <VideoFond {...VIDEOS.hero} />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-[linear-gradient(90deg,rgba(6,24,47,.88)_0%,rgba(6,24,47,.55)_45%,rgba(6,24,47,.25)_100%)]"
-          />
-          <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-nuit/90 to-transparent" />
-
-          <Flotte delai={1} className="absolute top-6 right-6 hidden items-center gap-2.5 rounded-full bg-white py-2 pr-4 pl-2 shadow-flottant md:flex">
-            <span className="flex size-8 items-center justify-center rounded-full bg-canard text-white">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true">
-                <path d="M5 12.5l4.5 4.5L19 7.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-            <span className="text-[0.82rem] leading-tight font-semibold text-marine">
-              Certificat
-              <br />
-              <span className="font-medium text-gris">vérifiable en ligne</span>
-            </span>
-          </Flotte>
-
-          <div className="relative grid items-end gap-8 p-6 pt-28 sm:p-10 md:grid-cols-[1.35fr_1fr] md:p-14 md:pt-40">
-            <HeroTexte>
-              <HeroLigne>
-                <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[0.8rem] font-semibold backdrop-blur-md">
-                  <span aria-hidden="true" className="inline-block size-2 rounded-full bg-soleil" />
-                  Cotonou · Conseil et formation de dirigeants
-                </p>
+          Fond blanc, titre marine à gauche ; à droite, la vidéo découpée en
+          biais sur une dalle marine, une photo en contrepoint, la carte de la
+          prochaine session posée dessus. Les diagonales viennent de la
+          référence Editech, le mouvement de la vidéo. */}
+      <section className="relative overflow-hidden">
+        <div aria-hidden="true" className="grille absolute top-0 left-0 h-[420px] w-[46%] opacity-70" />
+        <div className="relative mx-auto grid max-w-[1400px] items-center gap-10 px-5 pt-10 pb-16 sm:px-8 md:grid-cols-[1fr_1.15fr] md:pt-14 md:pb-24">
+          <HeroTexte>
+            <HeroLigne>
+              <p className="t-sur mb-4 inline-flex items-center gap-2">
+                <span aria-hidden="true" className="inline-block h-px w-8 bg-canard" />
+                Cotonou · Conseil et formation de dirigeants
+              </p>
+            </HeroLigne>
+            <h1 className="t-hero max-w-[12ch]">
+              <Mots texte="Former ceux qui" au="chargement" delai={0.1} />{" "}
+              <HeroLigne balise="span" className="inline-block">
+                <Souligne>décident</Souligne>
               </HeroLigne>
-              <h1 className="t-hero t-clair max-w-[12ch]">
-                <Mots texte="Former ceux qui" au="chargement" delai={0.1} />{" "}
-                <HeroLigne balise="span" className="inline-block">
-                  <Souligne>décident</Souligne>
-                </HeroLigne>
-              </h1>
-              <HeroLigne>
-                <p className="mt-6 max-w-[46ch] text-[1.05rem] leading-relaxed text-white/80">
-                  Masterclasses, formations certifiantes et mentorat, animés par des praticiens en
-                  exercice. Pour les dirigeants, cadres publics et entrepreneurs de la sous-région.
-                </p>
+            </h1>
+            <HeroLigne>
+              <p className="mt-6 max-w-[44ch] text-[1.05rem] leading-relaxed text-gris">
+                Masterclasses, formations certifiantes et mentorat, animés par des praticiens en
+                exercice. Pour les dirigeants, cadres publics et entrepreneurs de la sous-région.
+              </p>
+            </HeroLigne>
+            <HeroLigne className="mt-8 flex flex-wrap items-center gap-3">
+              <BoutonLien href="/programmes" variante="canard" taille="lg">
+                Voir les programmes
+              </BoutonLien>
+              <BoutonLien href="#parcours" variante="contourMarine" taille="lg">
+                Comment ça se passe
+              </BoutonLien>
+            </HeroLigne>
+            {visages.length > 0 && (
+              <HeroLigne className="mt-9 flex items-center gap-4">
+                <span className="flex -space-x-3">
+                  {visages.map((m) => (
+                    <span key={m.slug} className="relative block size-10 overflow-hidden rounded-full ring-[3px] ring-white">
+                      <Image src={portrait(m.slug, m.avatarUrl)} alt="" fill sizes="40px" className="object-cover" />
+                    </span>
+                  ))}
+                </span>
+                <span className="text-[0.88rem] text-gris">
+                  <Link href="/mentorat" className="font-semibold text-marine no-underline hover:text-canard">
+                    {mentors.length} {pluriel(mentors.length, "mentor")} en poste
+                  </Link>{" "}
+                  {pluriel(mentors.length, "ouvre", "ouvrent")} des créneaux chaque mois.
+                </span>
               </HeroLigne>
-              <HeroLigne className="mt-8 flex flex-wrap items-center gap-3">
-                <BoutonLien href="/programmes" variante="canard" taille="lg">
-                  Voir les programmes
-                </BoutonLien>
-                <BoutonLien href="#parcours" variante="verre" taille="lg">
-                  Comment ça se passe
-                </BoutonLien>
-              </HeroLigne>
-              {visages.length > 0 && (
-                <HeroLigne className="mt-8 flex items-center gap-4">
-                  <span className="flex -space-x-3">
-                    {visages.map((m) => (
-                      <span key={m.slug} className="relative block size-10 overflow-hidden rounded-full ring-[3px] ring-nuit">
-                        <Image src={portrait(m.slug, m.avatarUrl)} alt="" fill sizes="40px" className="object-cover" />
-                      </span>
-                    ))}
-                  </span>
-                  <span className="text-[0.88rem] text-white/75">
-                    <Link href="/mentorat" className="font-semibold text-white no-underline hover:text-soleil">
-                      {mentors.length} {pluriel(mentors.length, "mentor")} en poste
-                    </Link>{" "}
-                    {pluriel(mentors.length, "ouvre", "ouvrent")} des créneaux chaque mois.
-                  </span>
-                </HeroLigne>
-              )}
-            </HeroTexte>
+            )}
+          </HeroTexte>
 
-            <HeroCarte className="w-full max-w-[380px] rounded-carte bg-white p-5 text-marine shadow-flottant md:justify-self-end">
+          {/* La composition en biais. */}
+          <div className="relative mx-auto aspect-[5/4] w-full max-w-[680px]">
+            <HeroVisuel className="absolute inset-0">
+              {/* Dalle marine, derrière, décalée vers le haut à gauche. */}
+              <span
+                aria-hidden="true"
+                className="absolute top-0 left-[6%] h-[62%] w-[58%] bg-marine"
+                style={{ clipPath: "polygon(30% 0, 100% 0, 70% 100%, 0 100%)" }}
+              />
+              {/* La vidéo, coupée en biais sur sa gauche. */}
+              <div
+                className="absolute top-[6%] right-0 bottom-[10%] left-[18%] overflow-hidden bg-nuit"
+                style={{ clipPath: "polygon(26% 0, 100% 0, 100% 100%, 0 100%)" }}
+              >
+                <VideoFond {...VIDEOS.hero} />
+              </div>
+              {/* Trait canard le long de la diagonale. */}
+              <span
+                aria-hidden="true"
+                className="absolute top-[6%] bottom-[10%] left-[18%] w-[30%] bg-canard"
+                style={{ clipPath: "polygon(26% 0, 30.5% 0, 4.5% 100%, 0 100%)" }}
+              />
+              {/* Une photo en contrepoint, en bas à gauche, bord blanc. */}
+              <span
+                className="absolute bottom-0 left-0 block h-[44%] w-[46%] overflow-hidden bg-white p-2"
+                style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 22% 100%)" }}
+              >
+                <span className="relative block h-full w-full overflow-hidden" style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 22% 100%)" }}>
+                  <Image src={PHOTOS.atelier} alt="" fill sizes="320px" className="object-cover" />
+                </span>
+              </span>
+            </HeroVisuel>
+
+            <Flotte delai={1} className="absolute top-[2%] right-[2%] flex items-center gap-2.5 rounded-full bg-white py-2 pr-4 pl-2 shadow-flottant">
+              <span className="flex size-8 items-center justify-center rounded-full bg-canard text-white">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true">
+                  <path d="M5 12.5l4.5 4.5L19 7.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+              <span className="text-[0.82rem] leading-tight font-semibold text-marine">
+                Certificat
+                <br />
+                <span className="font-medium text-gris">vérifiable en ligne</span>
+              </span>
+            </Flotte>
+
+            <HeroCarte className="absolute right-[3%] -bottom-6 w-[min(320px,70%)] rounded-carte bg-white p-5 text-marine shadow-flottant">
               {prochaine ? (
                 <>
                   <p className="flex items-center justify-between text-[0.74rem] font-semibold text-canard">
                     Prochaine session
                     <span className="t-chiffres text-gris-clair">{dateCourte(prochaine.debut)}</span>
                   </p>
-                  <p className="mt-2 text-[1.05rem] leading-snug font-bold">
+                  <p className="mt-2 text-[1rem] leading-snug font-bold">
                     <Link href={`/programmes/${prochaine.programmeSlug}`} className="no-underline hover:text-canard">
                       {prochaine.programmeTitre}
                     </Link>
                   </p>
-                  <p className="mt-1 text-[0.82rem] text-gris">
+                  <p className="mt-1 text-[0.8rem] text-gris">
                     {formatLong.format(prochaine.debut)} · {montant(prochaine.prixFcfa)} FCFA
                   </p>
-                  <div className="mt-4">
+                  <div className="mt-3">
                     <Cohorte capacite={prochaine.capacite} pris={prochaine.confirmees} compteur />
                   </div>
                   <BoutonLien href={`/programmes/${prochaine.programmeSlug}`} variante="marine" taille="sm" className="mt-4 w-full">
@@ -161,8 +218,8 @@ export default async function Accueil() {
               ) : (
                 <>
                   <p className="text-[0.74rem] font-semibold text-canard">Le calendrier</p>
-                  <p className="mt-2 text-[1.05rem] leading-snug font-bold">Les prochaines sessions arrivent</p>
-                  <p className="mt-1 text-[0.82rem] text-gris">
+                  <p className="mt-2 text-[1rem] leading-snug font-bold">Les prochaines sessions arrivent</p>
+                  <p className="mt-1 text-[0.8rem] text-gris">
                     Laissez-nous vos coordonnées, nous vous prévenons à l&apos;ouverture.
                   </p>
                   <BoutonLien href="/contact" variante="marine" taille="sm" className="mt-4 w-full">
@@ -176,70 +233,82 @@ export default async function Accueil() {
       </section>
 
       {/* ============================================================= BANDEAU
-          Les six domaines défilent : c'est le sommaire du catalogue. */}
+          L'offre en une ligne qui défile. */}
       <div className="border-y border-ligne bg-white py-4">
         <Defilement>
-          {DOMAINES.map((d) => (
+          {OFFRE.map((o) => (
             <Link
-              key={d}
-              href={`/programmes?domaine=${encodeURIComponent(d)}`}
+              key={o.libelle}
+              href={o.href}
               className="flex items-center gap-6 pr-6 text-[1.05rem] font-bold whitespace-nowrap text-marine no-underline hover:text-canard"
             >
-              {d}
+              {o.libelle}
               <span aria-hidden="true" className="inline-block size-2 rounded-full bg-soleil" />
             </Link>
           ))}
         </Defilement>
       </div>
 
-      {/* ================================================================ BENTO
-          Ce que la plateforme contient, en une grille inégale : la formation
-          prend la grande case, le reste s'organise autour. */}
+      {/* ============================================================ DOMAINES
+          Six cartes hautes, photo et voile marine, comme les services de la
+          référence. Sur mobile, elles défilent à l'horizontale. */}
       <section className="mx-auto max-w-[1180px] px-4 py-16 sm:px-6 md:py-24">
-        <TitreSection sur="La plateforme" titre="Tout ce qu'il faut pour décider mieux" souligne="décider mieux" />
-        <Cascade className="grid gap-4 md:grid-cols-12 md:grid-rows-2">
-          <Element className="relative min-h-[380px] overflow-hidden rounded-grand bg-nuit md:col-span-7 md:row-span-2">
-            <VideoFond {...VIDEOS.formation} />
-            <div className="absolute inset-0 bg-gradient-to-t from-nuit/90 via-nuit/40 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-7 text-white md:p-9">
-              <p className="text-[0.8rem] font-semibold text-soleil">Masterclasses et formations</p>
-              <h3 className="mt-2 max-w-[18ch] text-[clamp(1.5rem,2.6vw,2.1rem)] leading-tight font-extrabold tracking-[-0.02em]">
-                Des praticiens en exercice, des cas réels, un livrable par séance
-              </h3>
-              <BoutonLien href="/programmes" variante="clair" className="mt-5">
-                Voir le catalogue
-              </BoutonLien>
-            </div>
-          </Element>
-
-          <Element className="relative overflow-hidden rounded-grand bg-pastel-ciel p-7 md:col-span-5">
-            <p className="text-[0.8rem] font-semibold text-canard">Mentorat</p>
-            <h3 className="t-h3 mt-2 text-[1.35rem]">Un dirigeant en poste, quelques créneaux par mois</h3>
-            <p className="mt-2 max-w-[36ch] text-[0.9rem] text-gris">
-              Pour trancher une décision avec quelqu&apos;un qui l&apos;a déjà prise.
-            </p>
-            <Link href="/mentorat" className="mt-4 inline-block text-[0.88rem] font-semibold text-marine no-underline hover:text-canard">
-              Trouver un mentor →
-            </Link>
-            <span className="absolute -right-4 -bottom-6 hidden size-28 overflow-hidden rounded-full ring-8 ring-white md:block">
-              <Image src={PHOTOS.reunion} alt="" fill sizes="112px" className="object-cover" />
-            </span>
-          </Element>
-
-          <Element className="rounded-grand bg-pastel-soleil p-7 md:col-span-3">
-            <p className="text-[0.8rem] font-semibold text-[#8a5f14]">Certifications</p>
-            <h3 className="t-h3 mt-2 text-[1.2rem]">Un numéro vérifiable en ligne</h3>
-            <p className="mt-2 text-[0.88rem] text-gris">Présence contrôlée, projet réel, soutenance.</p>
-          </Element>
-
-          <Element className="rounded-grand bg-marine p-7 text-white md:col-span-2">
-            <p className="text-[0.8rem] font-semibold text-soleil">Publications</p>
-            <h3 className="mt-2 text-[1.2rem] leading-tight font-extrabold tracking-[-0.02em]">Ce que le cabinet écrit</h3>
-            <Link href="/publications" className="mt-4 inline-block text-[0.85rem] font-semibold text-white/85 no-underline hover:text-white">
-              Lire →
-            </Link>
-          </Element>
+        <TitreSection
+          sur="Nos domaines"
+          titre="Six domaines, un même niveau d'exigence"
+          souligne="d'exigence"
+          action={
+            <BoutonLien href="/programmes" variante="contour" taille="sm">
+              Tout le catalogue
+            </BoutonLien>
+          }
+        />
+        <Cascade className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-3">
+          {DOMAINES.map((d) => (
+            <Element key={d} className="w-[78%] shrink-0 snap-start sm:w-auto">
+              <CarteDomaine domaine={d} href={`/programmes?domaine=${encodeURIComponent(d)}`} photo={PHOTO_DOMAINE[d] ?? PHOTOS.formation} />
+            </Element>
+          ))}
         </Cascade>
+      </section>
+
+      {/* ============================================================ CABINET
+          Collage en losanges à gauche, le propos à droite, deux repères. */}
+      <section className="bg-brume">
+        <div className="mx-auto grid max-w-[1180px] items-center gap-12 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-24">
+          <Reveler>
+            <Losanges photos={[PHOTOS.dirigeant, PHOTOS.reunion, PHOTOS.dirigeante]} etiquette="Cotonou · Sous-région" />
+          </Reveler>
+          <Reveler delai={0.15}>
+            <p className="t-sur">Le cabinet</p>
+            <h2 className="t-h2 mt-2">
+              Des praticiens, <Souligne>pas des conférenciers</Souligne>
+            </h2>
+            <p className="mt-4 max-w-[54ch] text-gris">
+              Nos intervenants exercent : directeur financier en poste, ancien directeur général d&apos;agence
+              publique, contrôleuse de gestion dans l&apos;industrie. Ils enseignent ce qu&apos;ils font, sur des cas
+              qu&apos;ils ont eu à traiter, dans des groupes volontairement petits.
+            </p>
+            <div className="mt-7 grid gap-4 sm:grid-cols-2">
+              {REPERES.map((r) => (
+                <div key={r.titre} className="flex gap-4 rounded-carte border border-ligne bg-white p-5">
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-[12px] bg-pastel-canard text-canard-fonce">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                      {r.icone}
+                    </svg>
+                  </span>
+                  <span>
+                    <span className="block font-bold text-marine">{r.titre}</span>
+                    <span className="mt-1 block text-[0.86rem] text-gris">{r.texte}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+            <BoutonLien href="/le-cabinet" variante="marine" className="mt-7">
+              Qui nous sommes
+            </BoutonLien>
+          </Reveler>
+        </div>
       </section>
 
       {/* ========================================================== PROGRAMMES */}
@@ -316,6 +385,56 @@ export default async function Accueil() {
             </Link>
           </Reveler>
         </div>
+      </section>
+
+      {/* ================================================================ BENTO
+          Ce que la plateforme contient, en une grille inégale : la formation
+          prend la grande case, le reste s'organise autour. */}
+      <section className="mx-auto max-w-[1180px] px-4 py-16 sm:px-6 md:py-24">
+        <TitreSection sur="La plateforme" titre="Tout ce qu'il faut pour décider mieux" souligne="décider mieux" />
+        <Cascade className="grid gap-4 md:grid-cols-12 md:grid-rows-2">
+          <Element className="relative min-h-[380px] overflow-hidden rounded-grand bg-nuit md:col-span-7 md:row-span-2">
+            <VideoFond {...VIDEOS.formation} />
+            <div className="absolute inset-0 bg-gradient-to-t from-nuit/90 via-nuit/40 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-7 text-white md:p-9">
+              <p className="text-[0.8rem] font-semibold text-soleil">Masterclasses et formations</p>
+              <h3 className="mt-2 max-w-[18ch] text-[clamp(1.5rem,2.6vw,2.1rem)] leading-tight font-extrabold tracking-[-0.02em]">
+                Des praticiens en exercice, des cas réels, un livrable par séance
+              </h3>
+              <BoutonLien href="/programmes" variante="clair" className="mt-5">
+                Voir le catalogue
+              </BoutonLien>
+            </div>
+          </Element>
+
+          <Element className="relative overflow-hidden rounded-grand bg-pastel-ciel p-7 md:col-span-5">
+            <p className="text-[0.8rem] font-semibold text-canard">Mentorat</p>
+            <h3 className="t-h3 mt-2 text-[1.35rem]">Un dirigeant en poste, quelques créneaux par mois</h3>
+            <p className="mt-2 max-w-[36ch] text-[0.9rem] text-gris">
+              Pour trancher une décision avec quelqu&apos;un qui l&apos;a déjà prise.
+            </p>
+            <Link href="/mentorat" className="mt-4 inline-block text-[0.88rem] font-semibold text-marine no-underline hover:text-canard">
+              Trouver un mentor →
+            </Link>
+            <span className="absolute -right-4 -bottom-6 hidden size-28 overflow-hidden rounded-full ring-8 ring-white md:block">
+              <Image src={PHOTOS.reunion} alt="" fill sizes="112px" className="object-cover" />
+            </span>
+          </Element>
+
+          <Element className="rounded-grand bg-pastel-soleil p-7 md:col-span-3">
+            <p className="text-[0.8rem] font-semibold text-[#8a5f14]">Certifications</p>
+            <h3 className="t-h3 mt-2 text-[1.2rem]">Un numéro vérifiable en ligne</h3>
+            <p className="mt-2 text-[0.88rem] text-gris">Présence contrôlée, projet réel, soutenance.</p>
+          </Element>
+
+          <Element className="rounded-grand bg-marine p-7 text-white md:col-span-2">
+            <p className="text-[0.8rem] font-semibold text-soleil">Publications</p>
+            <h3 className="mt-2 text-[1.2rem] leading-tight font-extrabold tracking-[-0.02em]">Ce que le cabinet écrit</h3>
+            <Link href="/publications" className="mt-4 inline-block text-[0.85rem] font-semibold text-white/85 no-underline hover:text-white">
+              Lire →
+            </Link>
+          </Element>
+        </Cascade>
       </section>
 
       {/* ============================================================= MENTORS */}

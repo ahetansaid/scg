@@ -281,3 +281,73 @@ export function Decoupe({
     </span>
   );
 }
+
+/* --- Carte de domaine : photo haute, voile marine en bas, icône et nom ------
+   Le modèle des cartes de services de la référence Editech. */
+
+export function CarteDomaine({ domaine, href, photo }: { domaine: string; href: string; photo: string }) {
+  const d = ICONES[domaine] ?? ICONES["Stratégie"]!;
+  return (
+    <Link
+      href={href}
+      className="group relative block aspect-[3/4] overflow-hidden rounded-carte bg-nuit text-white no-underline shadow-carte"
+    >
+      <Image
+        src={photo}
+        alt=""
+        fill
+        sizes="(max-width: 640px) 80vw, (max-width: 1024px) 45vw, 30vw"
+        className="object-cover transition-transform duration-700 group-hover:scale-[1.05] motion-reduce:group-hover:scale-100"
+      />
+      <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-marine via-marine/45 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 p-6">
+        <span className="flex size-12 items-center justify-center rounded-[14px] border border-white/25 bg-white/10 backdrop-blur-md">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+            {d.icone}
+          </svg>
+        </span>
+        <span className="mt-4 block text-[1.25rem] leading-tight font-extrabold tracking-[-0.02em]">{domaine}</span>
+        <span className="mt-1 block text-[0.84rem] text-white/75 transition-transform duration-300 group-hover:translate-x-1">
+          Voir les programmes →
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+/* --- Collage en losanges ------------------------------------------------------
+   Trois carrés tournés de 45°, la photo redressée à l'intérieur, comme dans
+   la section « à propos » de la référence. */
+
+export function Losanges({ photos, etiquette }: { photos: [string, string, string]; etiquette?: string }) {
+  const positions = [
+    "left-[22%] top-0 size-[46%]",
+    "left-0 top-[34%] size-[40%]",
+    "left-[44%] top-[38%] size-[46%]",
+  ];
+  return (
+    <div className="relative mx-auto aspect-square w-full max-w-[520px]">
+      <span aria-hidden="true" className="absolute top-[14%] right-[4%] size-[22%] rotate-45 rounded-[12%] bg-pastel-ciel" />
+      <span aria-hidden="true" className="absolute bottom-[2%] left-[30%] size-[16%] rotate-45 rounded-[12%] bg-pastel-soleil" />
+      {photos.map((src, i) => (
+        <span
+          key={src + i}
+          className={`absolute ${positions[i]} rotate-45 overflow-hidden rounded-[10%] shadow-flottant ring-8 ring-white`}
+        >
+          <span className="absolute inset-[-25%] block -rotate-45">
+            <Image src={src} alt="" fill sizes="300px" className="object-cover" />
+          </span>
+        </span>
+      ))}
+      {etiquette && (
+        <span
+          className="absolute bottom-[6%] left-0 bg-marine px-6 py-4 text-[0.9rem] font-bold text-white"
+          style={{ clipPath: "polygon(0 0, 100% 0, 88% 100%, 0 100%)" }}
+        >
+          {etiquette}
+          <span aria-hidden="true" className="absolute inset-y-0 right-0 w-3 bg-canard" />
+        </span>
+      )}
+    </div>
+  );
+}
