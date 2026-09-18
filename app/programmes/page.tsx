@@ -5,6 +5,7 @@ import { Cascade, Element } from "@/components/Animations";
 import { EnTete, Filtre } from "@/components/EnTete";
 import { PiedDePage } from "@/components/PiedDePage";
 import { CarteProgramme } from "@/components/Vitrine";
+import { PHOTOS } from "@/lib/photos";
 import { listerProgrammes } from "@/lib/catalogue";
 import { DOMAINES, FORMATS, LIBELLE_FORMAT, LIBELLE_NATURE, NATURES, pluriel } from "@/lib/vocabulaire";
 
@@ -50,6 +51,7 @@ export default async function Programmes(props: PageProps<"/programmes">) {
   return (
     <>
       <EnTete
+        photo={PHOTOS.formation}
         actif="/programmes"
         sur="Catalogue"
         titre="Six domaines, trois formats"

@@ -1,8 +1,9 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { HeroLigne, HeroTexte, Souligne } from "./Animations";
+import { HeroLigne, HeroTexte, HeroVisuel, Souligne } from "./Animations";
 import { Navigation } from "./Navigation";
+import { Decoupe } from "./Vitrine";
 
 /* ============================================================================
    En-tête clair des pages intérieures : navigation, fil d'Ariane, titre avec
@@ -18,6 +19,7 @@ export function EnTete({
   souligne,
   sous,
   etroit = false,
+  photo,
   children,
 }: {
   actif?: string;
@@ -28,6 +30,8 @@ export function EnTete({
   sous?: ReactNode;
   /** Colonne resserrée pour les pages de formulaire. */
   etroit?: boolean;
+  /** Photo en arche à droite du titre, sur les pages de catalogue. */
+  photo?: string;
   children?: ReactNode;
 }) {
   const parties = souligne ? titre.split(souligne) : [titre];
@@ -36,7 +40,12 @@ export function EnTete({
     <>
       <Navigation actif={actif} />
       <section className="relative overflow-hidden bg-brume">
-        <div className={`mx-auto px-4 pt-10 pb-14 sm:px-6 ${etroit ? "max-w-[720px]" : "max-w-[1180px]"}`}>
+        <div
+          className={`mx-auto px-4 pt-10 pb-14 sm:px-6 ${etroit ? "max-w-[720px]" : "max-w-[1180px]"} ${
+            photo ? "md:grid md:grid-cols-[1.25fr_1fr] md:items-center md:gap-12 md:pb-16" : ""
+          }`}
+        >
+          <div>
           {fil && fil.length > 0 && (
             <nav aria-label="Fil d'Ariane" className="mb-3 text-[0.82rem] text-gris">
               <ol className="flex list-none flex-wrap gap-1.5 pl-0">
@@ -87,6 +96,12 @@ export function EnTete({
               </HeroLigne>
             )}
           </HeroTexte>
+          </div>
+          {photo && (
+            <HeroVisuel className="relative z-[1] mx-auto hidden w-full max-w-[400px] md:block">
+              <Decoupe src={photo} alt="" forme="arche" className="aspect-[5/4] w-full" priority />
+            </HeroVisuel>
+          )}
         </div>
         <div aria-hidden="true" className="absolute inset-x-0 -bottom-px h-8 rounded-t-[100%_100%] bg-white md:h-12" />
       </section>

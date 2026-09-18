@@ -5,6 +5,7 @@ import { Cascade, Element, Eleve } from "@/components/Animations";
 import { EnTete, Filtre } from "@/components/EnTete";
 import { PiedDePage } from "@/components/PiedDePage";
 import { TitreSection } from "@/components/Vitrine";
+import { PHOTOS } from "@/lib/photos";
 import { categoriesArticles, listerArticles, listerRapports } from "@/lib/publications";
 import { formatLong } from "@/lib/vocabulaire";
 
@@ -32,6 +33,7 @@ export default async function Publications(props: PageProps<"/publications">) {
   return (
     <>
       <EnTete
+        photo={PHOTOS.conference}
         actif="/publications"
         sur="Publications"
         titre="Ce que le cabinet écrit"

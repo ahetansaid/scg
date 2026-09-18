@@ -5,6 +5,7 @@ import { EnTete } from "@/components/EnTete";
 import { CABINET, PiedDePage } from "@/components/PiedDePage";
 import { Bouton } from "@/components/ui/Bouton";
 import { Alerte, Champ, ChampTexte, PiegeRobots } from "@/components/ui/Champ";
+import { PHOTOS } from "@/lib/photos";
 
 import { envoyerMessage } from "./actions";
 
@@ -37,6 +38,7 @@ export default async function Contact(props: PageProps<"/contact">) {
   return (
     <>
       <EnTete
+        photo={PHOTOS.dirigeante}
         actif="/contact"
         sur="Contact"
         titre="Dites-nous ce que vous cherchez"

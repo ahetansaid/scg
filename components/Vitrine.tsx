@@ -255,6 +255,8 @@ const FORMES = {
   galet: "58% 42% 46% 54% / 47% 58% 42% 53%",
   goutte: "50% 50% 50% 50% / 60% 60% 40% 40%",
   rond: "50%",
+  /* Haut en plein cintre, bas aux coins des cartes : la forme des en-têtes. */
+  arche: "999px 999px 28px 28px",
 } as const;
 
 export function Decoupe({

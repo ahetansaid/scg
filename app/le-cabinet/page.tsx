@@ -49,6 +49,7 @@ export default function LeCabinet() {
   return (
     <>
       <EnTete
+        photo={PHOTOS.dirigeant}
         actif="/le-cabinet"
         sur="Le cabinet"
         titre="Un cabinet fait passer une organisation d'un point à un autre"

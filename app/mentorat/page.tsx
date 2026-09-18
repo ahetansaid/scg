@@ -5,6 +5,7 @@ import { Cascade, Element } from "@/components/Animations";
 import { EnTete, Filtre } from "@/components/EnTete";
 import { PiedDePage } from "@/components/PiedDePage";
 import { CarteMentor } from "@/components/Vitrine";
+import { PHOTOS } from "@/lib/photos";
 import { domainesDeMentorat, listerMentors } from "@/lib/mentorat";
 
 export const revalidate = 300;
@@ -24,6 +25,7 @@ export default async function Mentorat(props: PageProps<"/mentorat">) {
   return (
     <>
       <EnTete
+        photo={PHOTOS.reunion}
         actif="/mentorat"
         sur="Le réseau"
         titre="Des mentors en exercice"

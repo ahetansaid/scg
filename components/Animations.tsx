@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform, type Variants } from "motion/react";
 import type { ReactNode } from "react";
 
 /* ============================================================================
@@ -107,11 +107,21 @@ export function HeroTexte({ children }: { children: ReactNode }) {
   );
 }
 
-export function HeroLigne({ children, className = "" }: { children: ReactNode; className?: string }) {
+export function HeroLigne({
+  children,
+  className = "",
+  balise = "div",
+}: {
+  children: ReactNode;
+  className?: string;
+  /** `span` pour une ligne glissée dans un titre. */
+  balise?: "div" | "span";
+}) {
   const reduit = useReducedMotion();
-  if (reduit) return <div className={className}>{children}</div>;
+  const Balise = balise === "span" ? motion.span : motion.div;
+  if (reduit) return balise === "span" ? <span className={className}>{children}</span> : <div className={className}>{children}</div>;
   return (
-    <motion.div
+    <Balise
       className={className}
       variants={{
         cache: { opacity: 0, y: 22 },
@@ -119,7 +129,7 @@ export function HeroLigne({ children, className = "" }: { children: ReactNode; c
       }}
     >
       {children}
-    </motion.div>
+    </Balise>
   );
 }
 
@@ -196,6 +206,138 @@ export function Eleve({ children, className = "" }: { children: ReactNode; class
       whileTap={{ scale: 0.99 }}
       transition={{ type: "spring", stiffness: 380, damping: 26 }}
     >
+      {children}
+    </motion.div>
+  );
+}
+
+/* --- Mot à mot ---------------------------------------------------------------
+   Chaque mot monte depuis sous sa ligne de base, l'un après l'autre. Pour le
+   titre du hero (au chargement) et la phrase manifeste (à l'entrée en vue). */
+
+export function Mots({
+  texte,
+  au = "vue",
+  delai = 0,
+  className = "",
+}: {
+  texte: string;
+  au?: "chargement" | "vue";
+  delai?: number;
+  className?: string;
+}) {
+  const reduit = useReducedMotion();
+  const mots = texte.split(" ");
+  if (reduit) return <span className={className}>{texte}</span>;
+
+  const conteneur: Variants = {
+    cache: {},
+    visible: { transition: { staggerChildren: 0.055, delayChildren: delai } },
+  };
+  const mot: Variants = {
+    cache: { y: "110%", opacity: 0 },
+    visible: { y: "0%", opacity: 1, transition: { duration: 0.7, ease: SORTIE } },
+  };
+
+  return (
+    <motion.span
+      className={className}
+      variants={conteneur}
+      initial="cache"
+      {...(au === "chargement" ? { animate: "visible" } : { whileInView: "visible", viewport: { once: true, margin: "0px 0px -12% 0px" } })}
+      aria-label={texte}
+    >
+      {mots.map((m, i) => (
+        <span key={i} className="inline-block overflow-hidden pb-[0.08em] align-bottom" aria-hidden="true">
+          <motion.span className="inline-block" variants={mot}>
+            {m}
+          </motion.span>
+          {i < mots.length - 1 ? " " : ""}
+        </span>
+      ))}
+    </motion.span>
+  );
+}
+
+/* --- Défilement continu ------------------------------------------------------
+   Une bande qui glisse sans fin ; le contenu est doublé pour boucler sans
+   couture. En CSS pur (keyframes dans globals.css) : plus léger et plus
+   régulier qu'en JavaScript. S'arrête au survol et avec reduced-motion.   */
+
+export function Defilement({
+  children,
+  duree = 38,
+  className = "",
+}: {
+  children: ReactNode;
+  duree?: number;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`defile-cadre flex overflow-hidden ${className}`}
+      style={{ maskImage: "linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)" }}
+    >
+      <div className="defile flex shrink-0 items-center" style={{ animationDuration: `${duree}s` }}>
+        <div className="flex shrink-0 items-center">{children}</div>
+        <div className="flex shrink-0 items-center" aria-hidden="true" inert>
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* --- Flottement --------------------------------------------------------------
+   Les petites cartes posées sur la photo du hero respirent à peine.        */
+
+export function Flotte({
+  children,
+  amplitude = 6,
+  duree = 5,
+  delai = 0,
+  className = "",
+}: {
+  children: ReactNode;
+  amplitude?: number;
+  duree?: number;
+  delai?: number;
+  className?: string;
+}) {
+  const reduit = useReducedMotion();
+  if (reduit) return <div className={className}>{children}</div>;
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: [0, -amplitude, 0] }}
+      transition={{
+        opacity: { duration: 0.6, delay: delai, ease: SORTIE },
+        y: { duration: duree, delay: delai, repeat: Infinity, ease: "easeInOut" },
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* --- Parallaxe douce ---------------------------------------------------------
+   La photo du hero se déplace un peu moins vite que la page.              */
+
+export function Parallaxe({
+  children,
+  distance = 60,
+  className = "",
+}: {
+  children: ReactNode;
+  distance?: number;
+  className?: string;
+}) {
+  const reduit = useReducedMotion();
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 800], [0, reduit ? 0 : distance]);
+  return (
+    <motion.div className={className} style={{ y }}>
       {children}
     </motion.div>
   );

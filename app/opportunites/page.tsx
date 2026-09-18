@@ -5,6 +5,7 @@ import { Cascade, Element } from "@/components/Animations";
 import { EnTete, Filtre } from "@/components/EnTete";
 import { PiedDePage } from "@/components/PiedDePage";
 import { Bouton } from "@/components/ui/Bouton";
+import { PHOTOS } from "@/lib/photos";
 import { utilisateurCourant } from "@/lib/auth";
 import { mesFavoris } from "@/lib/espace";
 import { domainesOpportunites, listerOpportunites } from "@/lib/publications";
@@ -35,6 +36,7 @@ export default async function Opportunites(props: PageProps<"/opportunites">) {
   return (
     <>
       <EnTete
+        photo={PHOTOS.equipe}
         actif="/opportunites"
         sur="Opportunités"
         titre="Ce qui s'ouvre"
