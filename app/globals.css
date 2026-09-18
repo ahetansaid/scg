@@ -91,6 +91,12 @@ body > * {
   text-wrap: balance;
 }
 
+/* Les titres sont marine par défaut ; sur une photo ou une vidéo sombre, on
+   les passe en blanc avec cette classe (déclarée après, elle l'emporte). */
+.t-clair {
+  color: var(--color-blanc);
+}
+
 .t-h2 {
   font-weight: 800;
   font-size: clamp(1.7rem, 3.4vw, 2.4rem);

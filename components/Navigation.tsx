@@ -51,7 +51,7 @@ export function Navigation({
       <div className="sticky top-0 z-30 border-b border-ligne/70 bg-white/85 backdrop-blur-md supports-[backdrop-filter]:bg-white/75">
       <nav
         aria-label="Navigation principale"
-        className="mx-auto flex max-w-[1180px] items-center gap-6 px-4 py-3 sm:px-6"
+        className="mx-auto flex max-w-[1180px] items-center gap-3 px-4 py-3 sm:gap-6 sm:px-6"
       >
         <Link href="/" className="shrink-0 no-underline">
           <Logo hauteur={34} />

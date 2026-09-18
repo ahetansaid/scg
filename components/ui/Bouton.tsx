@@ -13,6 +13,8 @@ const VARIANTE = {
   contourMarine: "bg-white border border-ligne text-marine hover:border-marine",
   discret: "bg-transparent text-marine hover:bg-brume",
   clair: "bg-white text-marine hover:bg-brume",
+  /* Sur une photo ou une vidéo sombre. */
+  verre: "border border-white/35 bg-white/10 text-white backdrop-blur-md hover:bg-white/20",
 } as const;
 
 const TAILLE = {

@@ -25,7 +25,10 @@ const nextConfig: NextConfig = {
   images: {
     /* Visuels temporaires (lib/photos.ts). À retirer quand les photos de
        SCG seront dans public/. */
-    remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
+    remotePatterns: [
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "images.pexels.com" },
+    ],
   },
 
   async headers() {

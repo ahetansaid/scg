@@ -10,22 +10,21 @@ import {
   HeroCarte,
   HeroLigne,
   HeroTexte,
-  HeroVisuel,
   Mots,
-  Parallaxe,
   Reveler,
   Souligne,
 } from "@/components/Animations";
 import { Cohorte } from "@/components/motifs/Cohorte";
 import { Navigation } from "@/components/Navigation";
 import { PiedDePage } from "@/components/PiedDePage";
+import { VideoFond } from "@/components/VideoFond";
 import { BoutonLien } from "@/components/ui/Bouton";
-import { CarteMentor, CarteProgramme, Decoupe, TitreSection } from "@/components/Vitrine";
+import { CarteMentor, CarteProgramme, TitreSection } from "@/components/Vitrine";
 import { listerProgrammes, sessionsDuTrimestre } from "@/lib/catalogue";
 import { listerMentors } from "@/lib/mentorat";
-import { PHOTOS, portrait } from "@/lib/photos";
+import { PHOTOS, portrait, VIDEOS } from "@/lib/photos";
 import { listerArticles } from "@/lib/publications";
-import { DOMAINES, formatLong, LIBELLE_NATURE, montant, NATURES, pluriel } from "@/lib/vocabulaire";
+import { dateCourte, DOMAINES, formatLong, montant, pluriel } from "@/lib/vocabulaire";
 
 export const revalidate = 600;
 
@@ -73,128 +72,110 @@ export default async function Accueil() {
       <Navigation annonce={annonce} />
 
       {/* ================================================================ HERO
-          Titre à pleine taille, une photo en arche qui glisse au défilement,
-          deux repères posés dessus : le certificat, la prochaine session. */}
-      <section className="relative overflow-hidden">
-        <div
-          aria-hidden="true"
-          className="absolute top-[-10%] right-[-10%] h-[70%] w-[55%] rounded-full opacity-80 blur-3xl"
-          style={{ background: "radial-gradient(closest-side, #e8f3ff, transparent 70%)" }}
-        />
-        <div className="relative mx-auto grid max-w-[1180px] items-center gap-12 px-4 pt-12 pb-16 sm:px-6 md:grid-cols-[1.1fr_1fr] md:pt-20 md:pb-24">
-          <HeroTexte>
-            <HeroLigne>
-              <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-ligne bg-white px-3.5 py-1.5 text-[0.8rem] font-semibold text-marine">
-                <span aria-hidden="true" className="inline-block size-2 rounded-full bg-canard" />
-                Cotonou · Conseil et formation de dirigeants
-              </p>
-            </HeroLigne>
-            <h1 className="t-hero">
-              <Mots texte="Former ceux" au="chargement" delai={0.1} />
-              <br className="hidden md:block" />{" "}
-              <HeroLigne balise="span" className="mot-image">
-                <Image src={PHOTOS.atelier} alt="" fill sizes="120px" className="object-cover" priority />
-              </HeroLigne>{" "}
-              <Mots texte="qui" au="chargement" delai={0.3} />{" "}
-              <HeroLigne balise="span" className="inline-block">
-                <Souligne>décident</Souligne>
+          Un cadre arrondi qui remplit l'écran, une séquence vidéo derrière un
+          voile marine, le titre en bas à gauche, la prochaine session en bas
+          à droite. Le mouvement vient de l'image ; le texte, lui, se pose. */}
+      <section className="px-3 pt-3 sm:px-4">
+        <div className="relative mx-auto flex min-h-[640px] max-w-[1400px] flex-col justify-end overflow-hidden rounded-grand bg-nuit text-white md:min-h-[min(88vh,820px)]">
+          <VideoFond {...VIDEOS.hero} />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-[linear-gradient(90deg,rgba(6,24,47,.88)_0%,rgba(6,24,47,.55)_45%,rgba(6,24,47,.25)_100%)]"
+          />
+          <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-nuit/90 to-transparent" />
+
+          <Flotte delai={1} className="absolute top-6 right-6 hidden items-center gap-2.5 rounded-full bg-white py-2 pr-4 pl-2 shadow-flottant md:flex">
+            <span className="flex size-8 items-center justify-center rounded-full bg-canard text-white">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true">
+                <path d="M5 12.5l4.5 4.5L19 7.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+            <span className="text-[0.82rem] leading-tight font-semibold text-marine">
+              Certificat
+              <br />
+              <span className="font-medium text-gris">vérifiable en ligne</span>
+            </span>
+          </Flotte>
+
+          <div className="relative grid items-end gap-8 p-6 pt-28 sm:p-10 md:grid-cols-[1.35fr_1fr] md:p-14 md:pt-40">
+            <HeroTexte>
+              <HeroLigne>
+                <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[0.8rem] font-semibold backdrop-blur-md">
+                  <span aria-hidden="true" className="inline-block size-2 rounded-full bg-soleil" />
+                  Cotonou · Conseil et formation de dirigeants
+                </p>
               </HeroLigne>
-            </h1>
-            <HeroLigne>
-              <p className="mt-7 max-w-[44ch] text-[1.08rem] leading-relaxed text-gris">
-                Masterclasses, formations certifiantes et mentorat, animés par des praticiens en
-                exercice. Pour les dirigeants, cadres publics et entrepreneurs de la sous-région.
-              </p>
-            </HeroLigne>
-            <HeroLigne className="mt-8 flex flex-wrap items-center gap-4">
-              <BoutonLien href="/programmes" variante="canard" taille="lg">
-                Voir les programmes
-              </BoutonLien>
-              <BoutonLien href="#parcours" variante="contourMarine" taille="lg">
-                Comment ça se passe
-              </BoutonLien>
-            </HeroLigne>
-            <HeroLigne className="mt-10 flex items-center gap-4">
-              {visages.length > 0 ? (
-                <>
+              <h1 className="t-hero t-clair max-w-[12ch]">
+                <Mots texte="Former ceux qui" au="chargement" delai={0.1} />{" "}
+                <HeroLigne balise="span" className="inline-block">
+                  <Souligne>décident</Souligne>
+                </HeroLigne>
+              </h1>
+              <HeroLigne>
+                <p className="mt-6 max-w-[46ch] text-[1.05rem] leading-relaxed text-white/80">
+                  Masterclasses, formations certifiantes et mentorat, animés par des praticiens en
+                  exercice. Pour les dirigeants, cadres publics et entrepreneurs de la sous-région.
+                </p>
+              </HeroLigne>
+              <HeroLigne className="mt-8 flex flex-wrap items-center gap-3">
+                <BoutonLien href="/programmes" variante="canard" taille="lg">
+                  Voir les programmes
+                </BoutonLien>
+                <BoutonLien href="#parcours" variante="verre" taille="lg">
+                  Comment ça se passe
+                </BoutonLien>
+              </HeroLigne>
+              {visages.length > 0 && (
+                <HeroLigne className="mt-8 flex items-center gap-4">
                   <span className="flex -space-x-3">
                     {visages.map((m) => (
-                      <span key={m.slug} className="relative block size-10 overflow-hidden rounded-full ring-[3px] ring-white">
+                      <span key={m.slug} className="relative block size-10 overflow-hidden rounded-full ring-[3px] ring-nuit">
                         <Image src={portrait(m.slug, m.avatarUrl)} alt="" fill sizes="40px" className="object-cover" />
                       </span>
                     ))}
                   </span>
-                  <span className="text-[0.88rem] text-gris">
-                    <Link href="/mentorat" className="font-semibold text-marine no-underline hover:text-canard">
+                  <span className="text-[0.88rem] text-white/75">
+                    <Link href="/mentorat" className="font-semibold text-white no-underline hover:text-soleil">
                       {mentors.length} {pluriel(mentors.length, "mentor")} en poste
                     </Link>{" "}
                     {pluriel(mentors.length, "ouvre", "ouvrent")} des créneaux chaque mois.
                   </span>
-                </>
-              ) : (
-                <span className="flex flex-wrap gap-2">
-                  {NATURES.map((n) => (
-                    <Link
-                      key={n}
-                      href={`/programmes?nature=${n}`}
-                      className="rounded-full bg-brume px-3 py-1 text-[0.8rem] font-semibold text-marine no-underline hover:bg-brume-2"
-                    >
-                      {LIBELLE_NATURE[n]}
-                    </Link>
-                  ))}
-                </span>
+                </HeroLigne>
               )}
-            </HeroLigne>
-          </HeroTexte>
+            </HeroTexte>
 
-          <div className="relative mx-auto w-full max-w-[500px] pt-6 md:pt-0">
-            <HeroVisuel>
-              <Parallaxe distance={-40}>
-                <Decoupe src={PHOTOS.hero} alt="" forme="arche" className="aspect-[4/5] w-full" priority />
-              </Parallaxe>
-            </HeroVisuel>
-
-            <Flotte delai={0.9} className="absolute top-8 -right-3 flex items-center gap-2.5 rounded-full bg-white py-2 pr-4 pl-2 shadow-flottant sm:-right-8">
-              <span className="flex size-8 items-center justify-center rounded-full bg-canard text-white">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true">
-                  <path d="M5 12.5l4.5 4.5L19 7.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-              <span className="text-[0.82rem] leading-tight font-semibold text-marine">
-                Certificat
-                <br />
-                <span className="font-medium text-gris">vérifiable en ligne</span>
-              </span>
-            </Flotte>
-
-            <HeroCarte className="absolute -bottom-5 -left-3 w-[min(300px,82%)] rounded-carte bg-white p-4 shadow-flottant sm:-left-10">
+            <HeroCarte className="w-full max-w-[380px] rounded-carte bg-white p-5 text-marine shadow-flottant md:justify-self-end">
               {prochaine ? (
                 <>
-                  <p className="text-[0.74rem] font-semibold text-canard">Prochaine session</p>
-                  <p className="mt-1 text-[0.95rem] leading-snug font-bold text-marine">
+                  <p className="flex items-center justify-between text-[0.74rem] font-semibold text-canard">
+                    Prochaine session
+                    <span className="t-chiffres text-gris-clair">{dateCourte(prochaine.debut)}</span>
+                  </p>
+                  <p className="mt-2 text-[1.05rem] leading-snug font-bold">
                     <Link href={`/programmes/${prochaine.programmeSlug}`} className="no-underline hover:text-canard">
                       {prochaine.programmeTitre}
                     </Link>
                   </p>
-                  <p className="mt-1 text-[0.8rem] text-gris">
+                  <p className="mt-1 text-[0.82rem] text-gris">
                     {formatLong.format(prochaine.debut)} · {montant(prochaine.prixFcfa)} FCFA
                   </p>
-                  <div className="mt-3">
+                  <div className="mt-4">
                     <Cohorte capacite={prochaine.capacite} pris={prochaine.confirmees} compteur />
                   </div>
+                  <BoutonLien href={`/programmes/${prochaine.programmeSlug}`} variante="marine" taille="sm" className="mt-4 w-full">
+                    Réserver une place
+                  </BoutonLien>
                 </>
               ) : (
                 <>
                   <p className="text-[0.74rem] font-semibold text-canard">Le calendrier</p>
-                  <p className="mt-1 text-[0.95rem] leading-snug font-bold text-marine">
-                    Les prochaines sessions arrivent
+                  <p className="mt-2 text-[1.05rem] leading-snug font-bold">Les prochaines sessions arrivent</p>
+                  <p className="mt-1 text-[0.82rem] text-gris">
+                    Laissez-nous vos coordonnées, nous vous prévenons à l&apos;ouverture.
                   </p>
-                  <p className="mt-1 text-[0.8rem] text-gris">
-                    <Link href="/contact" className="font-semibold text-canard no-underline">
-                      Laissez-nous vos coordonnées
-                    </Link>
-                    , nous vous prévenons à l&apos;ouverture.
-                  </p>
+                  <BoutonLien href="/contact" variante="marine" taille="sm" className="mt-4 w-full">
+                    Être prévenu
+                  </BoutonLien>
                 </>
               )}
             </HeroCarte>
@@ -225,8 +206,8 @@ export default async function Accueil() {
       <section className="mx-auto max-w-[1180px] px-4 py-16 sm:px-6 md:py-24">
         <TitreSection sur="La plateforme" titre="Tout ce qu'il faut pour décider mieux" souligne="décider mieux" />
         <Cascade className="grid gap-4 md:grid-cols-12 md:grid-rows-2">
-          <Element className="relative min-h-[380px] overflow-hidden rounded-grand md:col-span-7 md:row-span-2">
-            <Image src={PHOTOS.formation} alt="" fill sizes="(max-width: 768px) 100vw, 680px" className="object-cover" />
+          <Element className="relative min-h-[380px] overflow-hidden rounded-grand bg-nuit md:col-span-7 md:row-span-2">
+            <VideoFond {...VIDEOS.formation} />
             <div className="absolute inset-0 bg-gradient-to-t from-nuit/90 via-nuit/40 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-7 text-white md:p-9">
               <p className="text-[0.8rem] font-semibold text-soleil">Masterclasses et formations</p>

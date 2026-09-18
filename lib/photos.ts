@@ -1,52 +1,58 @@
 /* ============================================================================
    VISUELS TEMPORAIRES
-   Ces photos viennent d'Unsplash (licence libre, hébergement Unsplash). Elles
-   tiennent la place des photos de SCG en attendant les vraies : remplacez les
-   valeurs ici, rien d'autre ne change. Choisies pour montrer des cadres et
-   dirigeants africains en situation professionnelle.
+   Photos et vidéos libres de droits (licence Pexels : usage commercial
+   autorisé, sans attribution). Elles tiennent la place des visuels de SCG en
+   attendant les vrais : remplacez les valeurs ici, rien d'autre ne change.
+   Choisies pour montrer des cadres et dirigeants africains en situation
+   professionnelle, avec une lumière et un cadrage cohérents.
+
+   Les vidéos sont réencodées en local (public/video, sans son, 720p et
+   540p) pour ne pas dépendre d'un hébergeur tiers ni charger 7 Mo.
    ============================================================================ */
 
-/* On demande à Unsplash une image déjà réduite : l'optimiseur de Next
-   rapatrie la source à chaque première demande, et un original de 3 Mo
-   dépasse son délai. À 1600 px de large, on reste sous 300 Ko. */
-const U = (id: string, largeur = 1600) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${largeur}&q=80`;
+/* Pexels sert l'image déjà réduite et compressée. */
+const P = (id: number, largeur = 1600) =>
+  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${largeur}`;
 
 export const PHOTOS = {
-  /* Femme cadre, lunettes, bureau lumineux, sourire franc. */
-  hero: U("photo-1573497161161-c3e73707e25c"),
-  dirigeant: U("photo-1531384441138-2736e62e0919"),
-  dirigeante: U("photo-1531123897727-8f129e1688ce"),
-  /* Intervenant devant une salle. */
-  formation: U("photo-1591115765373-5207764f72e7"),
-  /* Deux personnes penchées sur un ordinateur. */
-  atelier: U("photo-1560250056-07ba64664864"),
-  /* Une équipe alignée dans un open space. */
-  equipe: U("photo-1573496774426-fe3db3dd1731"),
-  /* Deux femmes en discussion à une table, près d'une baie vitrée. */
-  reunion: U("photo-1573497491208-6b1acb260507"),
-  /* Cadre à son bureau, mur à motifs. */
-  conference: U("photo-1573497701175-00c200fd57f0"),
+  /* Dirigeante souriante à son bureau, chemise blanche. */
+  hero: P(36551042),
+  dirigeante: P(36551042),
+  /* Cadre, chemise blanche, sourire franc. */
+  dirigeant: P(9301461),
+  /* Formateur debout auprès de participants. */
+  formation: P(9301316),
+  /* Trois personnes penchées sur un écran. */
+  atelier: P(9489091),
+  /* Équipe debout dans un bureau de Lagos. */
+  equipe: P(30688593),
+  /* Réunion vue de haut, Lagos. */
+  reunion: P(30688596),
+  /* Deux hommes en réunion devant un tableau. */
+  conference: P(9301745),
+  /* Femme d'affaires, bras croisés, fond uni. */
+  portrait: P(38670854),
+} as const;
+
+/* Vidéos de fond, servies depuis public/. */
+export const VIDEOS = {
+  hero: { src: "/video/hero.mp4", srcMobile: "/video/hero-mobile.mp4", affiche: "/video/hero.jpg" },
+  formation: { src: "/video/formation.mp4", affiche: "/video/formation.jpg" },
 } as const;
 
 /* Vignette par domaine, quand un programme n'a pas encore sa propre image. */
 export const PHOTO_DOMAINE: Record<string, string> = {
-  Finance: U("photo-1521791136064-7986c2920216"),
-  Stratégie: U("photo-1556761175-4b46a572b786"),
-  "Secteur public": U("photo-1591115765373-5207764f72e7"),
-  Digital: U("photo-1573164713714-d95e436ab8d6"),
-  "Ressources humaines": U("photo-1573496774426-fe3db3dd1731"),
-  Entrepreneuriat: U("photo-1560250056-07ba64664864"),
+  Finance: P(5717310),
+  Stratégie: P(9301745),
+  "Secteur public": P(30688592),
+  Digital: P(9301502),
+  "Ressources humaines": P(7446593),
+  Entrepreneuriat: P(30690402),
 };
 
 /* Portraits de remplacement pour les mentors sans photo. Tirés à tour de
    rôle, de façon stable, pour qu'un même mentor garde le même visage. */
-export const PORTRAITS = [
-  U("photo-1531384441138-2736e62e0919", 600),
-  U("photo-1573497019418-b400bb3ab074", 600),
-  U("photo-1531123897727-8f129e1688ce", 600),
-  U("photo-1589156280159-27698a70f29e", 600),
-];
+export const PORTRAITS = [P(9301461, 600), P(36551042, 600), P(5060564, 600), P(20209020, 600)];
 
 export function photoProgramme(domaine: string, imageUrl?: string | null) {
   return imageUrl || PHOTO_DOMAINE[domaine] || PHOTOS.formation;
